@@ -1,0 +1,3 @@
+[submodule "Assets/ElasticSea/Framework"]
+	path = Assets/ElasticSea/Framework
+	url = https://github.com/ElasticSea/unity-framework.git
