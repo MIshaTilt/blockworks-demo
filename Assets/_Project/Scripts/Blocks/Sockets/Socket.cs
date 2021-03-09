@@ -67,6 +67,7 @@ namespace Blocks.Sockets
         {
             gameObject.layer = LayerMask.NameToLayer("Socket");
             trigger = gameObject.AddComponent<SphereCollider>();
+            trigger.center = Vector3.zero;
             trigger.isTrigger = trigger;
             Active = active;
             Radius = radius;
