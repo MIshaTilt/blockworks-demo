@@ -118,24 +118,46 @@ namespace Blocks.Sockets
 
         private void OnDrawGizmos()
         {
-            var candidates = Trigger();
-            foreach (var candidate in candidates)
+            if (active == false)
             {
-                Gizmos.color = Color.yellow;
-                GizmoUtils.DrawLine(transform.position, candidate.transform.position, 5);
+                return;
             }
 
+            if (connectedSocket != null)
+            {
+                Gizmos.matrix = transform.localToWorldMatrix;
+                Gizmos.color = Color.gray.SetAlpha(.5f);
+                Gizmos.DrawSphere(Vector3.zero, Radius/2);
+                return;
+            }
+            
+            var candidates = Trigger();
             if (candidates.Any())
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.matrix = transform.localToWorldMatrix;
                 Gizmos.DrawSphere(Vector3.zero, Radius * .5f);
+                
+                foreach (var candidate in candidates)
+                {
+                    Gizmos.color = Color.yellow;
+                    Gizmos.matrix = Matrix4x4.identity;
+                    GizmoUtils.DrawLine(transform.position, candidate.transform.position, 5);
+                }
+                
+                var color = Type == SocketType.Male ? Color.blue : Color.red;
+                Gizmos.matrix = transform.localToWorldMatrix;
+                Gizmos.color = color.SetAlpha(.5f);
+                Gizmos.DrawWireSphere(Vector3.zero, Radius);
+            }
+            else
+            {
+                var color = Type == SocketType.Male ? Color.blue : Color.red;
+                Gizmos.matrix = transform.localToWorldMatrix;
+                Gizmos.color = color.SetAlpha(.5f);
+                Gizmos.DrawSphere(Vector3.zero, Radius);
             }
 
-            var color = Type == SocketType.Male ? Color.blue : Color.red;
-            Gizmos.matrix = transform.localToWorldMatrix;
-            Gizmos.color = color.SetAlpha(.5f);
-            Gizmos.DrawWireSphere(Vector3.zero, Radius);
         }
     }
 }
