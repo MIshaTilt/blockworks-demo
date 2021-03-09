@@ -1,4 +1,6 @@
 using System.IO;
+using _Project.Scripts.Blocks;
+using Blocks.Sockets;
 using ElasticSea.Framework.Extensions;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -15,13 +17,14 @@ namespace Blocks
         [SerializeField] private Mesh blockMesh;
         [SerializeField] private Mesh pinMesh;
         [SerializeField] private Material material;
+        [SerializeField] private BlockMaterial blockMaterial;
 
 #if UNITY_EDITOR
         public void CreatePrefab()
         {
             var go = BuildBlock();
 
-            AssetDatabase.CreateAsset(go.GetComponent<MeshFilter>().sharedMesh, Path.Combine(path, $"{name}_mesh.asset"));
+            AssetDatabase.CreateAsset(go.GetComponentInChildren<MeshFilter>().sharedMesh, Path.Combine(path, $"{name}_mesh.asset"));
             PrefabUtility.SaveAsPrefabAsset(go, Path.Combine(path, $"{name}.prefab"));
             AssetDatabase.SaveAssets();
 
@@ -43,6 +46,8 @@ namespace Blocks
 
         private GameObject BuildBlock()
         {
+            var chunkGo = new GameObject(name);
+            
             var go = new GameObject(name);
             var mesh = ExtendMesh();
 
@@ -50,18 +55,24 @@ namespace Blocks
             {
                 for (var z = 0; z < size.z; z++)
                 {
-                    var pin = new GameObject($"Pin [{x}][{z}]");
-
+                    var pin = new GameObject($"Male [{x}][{z}]");
                     var pinMf = pin.AddComponent<MeshFilter>();
                     pinMf.sharedMesh = pinMesh;
-
                     var pinMr = pin.AddComponent<MeshRenderer>();
                     pinMr.material = material;
-
+                    var socket = pin.AddComponent<Socket>();
+                    socket.Type = SocketType.Male;
                     pin.transform.SetParent(go.transform, false);
-
                     var offset = new Vector3(x + .5f, size.y, z + .5f);
                     pin.transform.position = offset.Multiply(blockMesh.bounds.size);
+                    
+                    var pin2 = new GameObject($"Female [{x}][{z}]");
+                    var socket2 = pin2.AddComponent<Socket>();
+                    socket2.Type = SocketType.Female;
+                    pin2.transform.SetParent(go.transform, false);
+                    pin2.transform.localRotation = Quaternion.Euler(180, 0, 0);
+                    var offset2 = new Vector3(x + .5f, 0, z + .5f);
+                    pin2.transform.position = offset2.Multiply(blockMesh.bounds.size);
                 }
             }
 
@@ -71,7 +82,23 @@ namespace Blocks
             var mr = go.AddComponent<MeshRenderer>();
             mr.material = material;
 
-            return go;
+            var collider = go.AddComponent<BoxCollider>();
+            collider.center = mesh.bounds.center;
+            collider.size = mesh.bounds.size;
+
+            
+            var block = go.AddComponent<Block>();
+            block.BlockMaterial = blockMaterial;
+            
+            go.transform.SetParent(chunkGo.transform, false);
+
+            var rb = chunkGo.AddComponent<Rigidbody>();
+            
+            var chunk = chunkGo.AddComponent<Chunk>();
+
+            var snapper = chunkGo.AddComponent<ChunkSnapper>();
+            
+            return chunkGo;
         }
 
         private Mesh ExtendMesh()
