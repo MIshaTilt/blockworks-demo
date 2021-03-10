@@ -107,7 +107,7 @@ namespace Blocks
             // TODO Direction has to be inverted? Maybe its because the different default direction of female/male socket
             otherDir = -otherDir;
             
-            return shadow.AlignShadow(thisA, thisDir, otherA, -otherDir, blockSource);
+            return shadow.AlignShadow(thisA, thisDir, otherA, otherDir, blockSource);
         }
 
         private static (Vector3 position, Quaternion rotation) AlignShadow(this SnapPreview shadow, Transform thisA, Transform thisB, Transform otherA, Transform otherB, Transform blockSource)
