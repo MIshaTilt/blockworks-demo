@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Project.Scripts.Blocks;
 using Blocks.Sockets;
 using ElasticSea.Framework.Extensions;
 using UnityEngine;
@@ -19,7 +18,7 @@ namespace Blocks
                 thisSocket.Connect(otherSocket);
             }
 
-            return ConnectGroups(result.First().ThisSocket.Owner.GetBlocksInGroup());
+            return ConnectGroups(result.First().ThisSocket.Block.GetAllConnectedBlocks());
         }
 
         private static Chunk ConnectGroups(IEnumerable<Block> blocks)
@@ -37,7 +36,7 @@ namespace Blocks
             {
                 foreach (var block in group.GetComponentsInChildren<Block>())
                 {
-                    block.Group = null;
+                    block.Chunk = null;
                 }
             }
             
@@ -50,7 +49,7 @@ namespace Blocks
             
             foreach (var block in newGroup.GetComponentsInChildren<Block>())
             {
-                block.Group = newGroup;
+                block.Chunk = newGroup;
             }
             
             return newGroup;
@@ -72,11 +71,11 @@ namespace Blocks
                 link.transform.localRotation = Quaternion.Euler(link.transform.localRotation.eulerAngles.Snap(45f));
             }
 
-            // Create a new block
-            var blk = newParent.AddComponent<Chunk>();
+            // Create a new chunk
+            var chnk = newParent.AddComponent<Chunk>();
 
             // Check if block is anchored and set the rigidbody appropriately
-            var isAnchored = blk.GetComponentInChildren<Block>().IsChunkAnchored;
+            var isAnchored = chnk.IsAnchored;
             if (isAnchored == false)
             {
             }
@@ -85,7 +84,7 @@ namespace Blocks
             newRb.interpolation = RigidbodyInterpolation.Interpolate;
             newRb.isKinematic = isAnchored;
             
-            return blk;
+            return chnk;
         }
 
         public static List<Chunk> DisconnectChunk(Chunk group, IEnumerable<Block> chunk)

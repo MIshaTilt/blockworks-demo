@@ -14,10 +14,10 @@ namespace Blocks.Builder
             return ExtendMesh();
         }
 
-        public override void SetupPins(GameObject go)
+        public override void SetupPins(Block go)
         {
-            AddSocket(go.transform, SocketType.Male, new Vector3(0, 0.2f * size.y, 0), size.x, size.z);
-            AddSocket(go.transform, SocketType.Female, new Vector3(0, 0, 0), size.x, size.z);
+            AddSocket(go, SocketType.Male, new Vector3(0, 0.2f * size.y, 0), size.x, size.z);
+            AddSocket(go, SocketType.Female, new Vector3(0, 0, 0), size.x, size.z);
         }
 
         protected override void OnValidate()

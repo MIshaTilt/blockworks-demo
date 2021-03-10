@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using _Project.Scripts.Blocks;
 using Blocks.Sockets;
 using ElasticSea.Framework.Extensions;
 using UnityEngine;
@@ -56,7 +55,7 @@ namespace Blocks
 
         public List<ISet<Block>> SplitBy(ISet<Block> chunk)
         {
-            var all = GetComponentInChildren<Block>().GetBlocksInGroup().ToList();
+            var all = GetComponentInChildren<Block>().GetAllConnectedBlocks().ToList();
             var rest = all.Except(chunk).ToList();
             foreach (var link in rest)
             {
@@ -64,7 +63,7 @@ namespace Blocks
                 {
                     if (socket.ConnectedSocket != null)
                     {
-                        if (chunk.Contains(socket.ConnectedSocket.Owner))
+                        if (chunk.Contains(socket.ConnectedSocket.Block))
                         {
                             socket.Disconnect();
                         }
@@ -78,13 +77,15 @@ namespace Blocks
             while (rest.Any())
             {
                 var first = rest.First();
-                var groupA = first.GetBlocksInGroup(chunk);
+                var groupA = first.GetAllConnectedBlocks(chunk);
                 rest = rest.Except(groupA).ToList();
                 groups.Add(groupA);
             }
 
             return groups;
         }
+
+        public bool IsAnchored => GetComponentsInChildren<Block>().Any(l => l.IsAnchored);
 
         private void OnDrawGizmosSelected()
         {
@@ -106,7 +107,7 @@ namespace Blocks
                 Gizmos.DrawLine(from, to);
             }
 
-            foreach (var (a, b) in GetComponentInChildren<Block>().GetAllEdges())
+            foreach (var (a, b) in GetComponentInChildren<Block>().GetAllConnections())
             {
                 Gizmos.color = Color.yellow;
 

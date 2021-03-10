@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using _Project.Scripts.Blocks;
 using Blocks.Sockets;
 using ElasticSea.Framework.Extensions;
 using UnityEngine;
@@ -73,7 +72,7 @@ namespace Blocks
             {
                 var toSocket = to.gameObject.AddComponent<Socket>();
                 toSocket.Type = fromSocket.Type;
-                toSocket.Owner = fromSocket.Owner;
+                toSocket.Block = fromSocket.Block;
                 toSocket.Active = false;
                 cloneToBlockMapping[toSocket] = fromSocket;
             }

@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using _Project.Scripts.Blocks;
 using ElasticSea.Framework.Util;
 using UnityEngine;
 
@@ -8,7 +7,7 @@ namespace Blocks.Sockets
 {
     public class Socket : MonoBehaviour
     {
-        [SerializeField] private Block owner;
+        [SerializeField] private Block block;
         [SerializeField] private SocketType type;
         [SerializeField] private float radius = 0.125f;
         [SerializeField] private bool active = true;
@@ -16,24 +15,6 @@ namespace Blocks.Sockets
         [SerializeField] private Socket connectedSocket;
         
         private SphereCollider trigger;
-
-        public Block Owner
-        {
-            get
-            {
-                if (owner == null)
-                {
-                    owner = GetComponentInParent<Block>();
-
-                    if (owner == null)
-                    {
-                        throw new InvalidOperationException("This socket does not belong to any block. And no parent block could not be found.");
-                    }
-                }
-                return owner;
-            }
-            set => owner = value;
-        }
 
         public SocketType Type
         {
@@ -63,6 +44,12 @@ namespace Blocks.Sockets
 
         public Socket ConnectedSocket => connectedSocket;
 
+        public Block Block
+        {
+            get => block;
+            set => block = value;
+        }
+
         private void Awake()
         {
             gameObject.layer = LayerMask.NameToLayer("Socket");
@@ -83,7 +70,7 @@ namespace Blocks.Sockets
             return candidates
                 .Select(c => c.GetComponent<Socket>())
                 .Where(s => s.Type != Type)
-                .Where(s => s.Owner != Owner)
+                .Where(s => s.Block != Block)
                 .ToArray();
         }
         
@@ -110,6 +97,7 @@ namespace Blocks.Sockets
                 DetachSocket();
             }
         }
+        
         private void DetachSocket()
         {
             connectedSocket = null;
@@ -131,6 +119,12 @@ namespace Blocks.Sockets
                 return;
             }
             
+            var color = Type == SocketType.Male ? Color.blue : Color.red;
+            if (block.Chunk.IsAnchored)
+            {
+                color = Color.magenta;
+            }
+            
             var candidates = Trigger();
             if (candidates.Any())
             {
@@ -145,19 +139,16 @@ namespace Blocks.Sockets
                     GizmoUtils.DrawLine(transform.position, candidate.transform.position, 5);
                 }
                 
-                var color = Type == SocketType.Male ? Color.blue : Color.red;
                 Gizmos.matrix = transform.localToWorldMatrix;
                 Gizmos.color = color.SetAlpha(.5f);
                 Gizmos.DrawWireSphere(Vector3.zero, Radius);
             }
             else
             {
-                var color = Type == SocketType.Male ? Color.blue : Color.red;
                 Gizmos.matrix = transform.localToWorldMatrix;
                 Gizmos.color = color.SetAlpha(.5f);
                 Gizmos.DrawSphere(Vector3.zero, Radius);
             }
-
         }
     }
 }

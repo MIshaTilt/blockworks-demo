@@ -1,4 +1,3 @@
-using _Project.Scripts.Blocks;
 using UnityEngine;
 
 namespace Blocks
@@ -26,6 +25,7 @@ namespace Blocks
             if (isSnapping)
             {
                 snapPreview.EndSnap();
+                DestroyImmediate(snapPreview.gameObject);
                 isSnapping = false;
             }
         }

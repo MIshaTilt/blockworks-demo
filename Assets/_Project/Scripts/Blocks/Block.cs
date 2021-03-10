@@ -1,88 +1,90 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Blocks;
 using Blocks.Sockets;
 using UnityEngine;
-using UnityEngine.Serialization;
 
-namespace _Project.Scripts.Blocks
+namespace Blocks
 {
     [ExecuteInEditMode]
     public class Block : MonoBehaviour
     {
-        [SerializeField] private Chunk group;
-        [SerializeField] private BlockMaterial blockMaterial;
-        [FormerlySerializedAs("isLinkAnchored")] [SerializeField] private bool isBlockAnchored;
+        [Header("References")]
+        [SerializeField] private Chunk chunk;
         [SerializeField] private Socket[] sockets;
+        
+        [Header("Parameters")]
+        public bool IsAnchored;
+        public BlockMaterial BlockMaterial;
 
         public Action<Chunk> OnBlockConnected = group => { };
         public Action<Chunk> OnBlockDisconnected = group => { };
 
-        public Chunk Group
+        public Chunk Chunk
         {
-            get => group;
+            get => chunk;
             set
             {
-                if (group) OnBlockDisconnected(group);
-                group = value;
-                if (group) OnBlockConnected(group);
+                if (chunk) OnBlockDisconnected(chunk);
+                chunk = value;
+                if (chunk) OnBlockConnected(chunk);
             }
         }
 
-        private HashSet<Block> connections
+        private IEnumerable<Block> Connections
         {
             get
             {
-                var set = new HashSet<Block>();
                 for (var i = 0; i < sockets.Length; i++)
                 {
                     var socket = sockets[i];
                     if (socket.ConnectedSocket != null)
                     {
-                        set.Add(socket.ConnectedSocket.Owner);
+                        yield return socket.ConnectedSocket.Block;
                     }
                 }
-
-                return set;
             }
         }
 
-        public List<Block> Connections => connections.ToList();
-        public List<Socket> Sockets
-        {
-            get => sockets.ToList();
-        }
+        public IEnumerable<Socket> Sockets => sockets;
 
+        public float Mass
+        {
+            get
+            {
+                var boundsSize = GetComponent<Collider>().bounds.size;
+                return boundsSize.x * boundsSize.y * boundsSize.z * BlockMaterial.Density;
+            }
+        }
+        
         private void Awake()
-        {
-            FindSockets();
-        }
-
-        public void FindSockets()
         {
             sockets = GetComponentsInChildren<Socket>();
         }
 
-        public HashSet<Block> GetBlocksInGroup()
+        public HashSet<Block> GetAllConnectedBlocks(ISet<Block> ignore = null)
         {
             var allConnections = new HashSet<Block>();
             allConnections.Add(this);
-            GetBlocksInGroup(this, allConnections, null);
-            return allConnections;
-        }
-        
-        public HashSet<Block> GetBlocksInGroup(ISet<Block> ignore)
-        {
-            var allConnections = new HashSet<Block>();
-            allConnections.Add(this);
-            GetBlocksInGroup(this, allConnections, ignore);
+            GetAllConnectedBlocks(this, allConnections, ignore);
             return allConnections;
         }
 
-        private void GetBlocksInGroup(Block parent, HashSet<Block> allConnections, ISet<Block> ignore)
+        public HashSet<(Block from, Block to)> GetAllConnections()
         {
-            foreach (var connection in parent.connections)
+            var allConnections = new HashSet<(Block, Block)>();
+            GetAllConnections(this, allConnections);
+            return allConnections;
+        }
+
+        public void AddSocket(Socket socket)
+        {
+            sockets = sockets.Append(socket).ToArray();
+        }
+
+        private void GetAllConnectedBlocks(Block parent, HashSet<Block> allConnections, ISet<Block> ignore)
+        {
+            foreach (var connection in parent.Connections)
             {
                 if (ignore != null && ignore.Contains(connection))
                 {
@@ -92,58 +94,22 @@ namespace _Project.Scripts.Blocks
                 if (!allConnections.Contains(connection))
                 {
                     allConnections.Add(connection);
-                    GetBlocksInGroup(connection, allConnections, ignore);
+                    GetAllConnectedBlocks(connection, allConnections, ignore);
                 }
             }
         }
 
-        public HashSet<(Block,Block)> GetAllEdges()
+        private void GetAllConnections(Block parent, ISet<(Block, Block)> allConnections)
         {
-            var allConnections = new HashSet<(Block,Block)>();
-            GetAllEdges(this, allConnections);
-            return allConnections;
-        }
-
-        private void GetAllEdges(Block parent, HashSet<(Block,Block)> allConnections)
-        {
-            foreach (var connection in parent.connections)
+            foreach (var connection in parent.Connections)
             {
                 var edge = (parent, connection);
                 if (!allConnections.Contains(edge))
                 {
                     allConnections.Add(edge);
-                    GetAllEdges(connection, allConnections);
+                    GetAllConnections(connection, allConnections);
                 }
             }
-        }
-
-        public bool IsChunkAnchored => GetBlocksInGroup().Any(l => l.isBlockAnchored);
-
-        public bool IsBlockAnchored
-        {
-            get => isBlockAnchored;
-            set => isBlockAnchored = value;
-        }
-
-        public float Mass
-        {
-            get
-            {
-                var collider = GetComponent<Collider>();
-                if (collider)
-                {
-                    var boundsSize = collider.bounds.size;
-                    return boundsSize.x * boundsSize.y * boundsSize.z * blockMaterial.Density;
-                }
-
-                return blockMaterial.Density;
-            }
-        }
-
-        public BlockMaterial BlockMaterial
-        {
-            get => blockMaterial;
-            set => blockMaterial = value;
         }
     }
 }

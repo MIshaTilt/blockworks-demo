@@ -1,5 +1,4 @@
 using System.IO;
-using _Project.Scripts.Blocks;
 using ElasticSea.Framework.Extensions;
 using UnityEngine;
 #if UNITY_EDITOR
@@ -44,10 +43,16 @@ namespace Blocks.Builder
         {
             var chunkGo = new GameObject(name);
             
+            var chunk = chunkGo.AddComponent<Chunk>();
+            
             var go = new GameObject(name);
+            
+            var block = go.AddComponent<Block>();
+            block.Chunk = chunk;
+            block.BlockMaterial = blockMaterial;
 
             var mesh = strategy.BuildMesh();
-            strategy.SetupPins(go);
+            strategy.SetupPins(block);
 
             var mf = go.AddComponent<MeshFilter>();
             mf.mesh = mesh;
@@ -63,14 +68,10 @@ namespace Blocks.Builder
                 mr2.material = material;
             }
             
-            var block = go.AddComponent<Block>();
-            block.BlockMaterial = blockMaterial;
             
             go.transform.SetParent(chunkGo.transform, false);
 
             var rb = chunkGo.AddComponent<Rigidbody>();
-            
-            var chunk = chunkGo.AddComponent<Chunk>();
 
             var snapper = chunkGo.AddComponent<ChunkSnapper>();
             
