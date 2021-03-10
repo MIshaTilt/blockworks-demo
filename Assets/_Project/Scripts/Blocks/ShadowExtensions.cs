@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using ElasticSea.Framework.Extensions;
 using UnityEngine;
 
@@ -7,7 +8,7 @@ namespace Blocks
 {
     public static class ShadowExtensions
     {
-        public static (Vector3 position, Quaternion rotation, bool valid) GetShadowAlign(this SnapPreview shadow, Chunk chunkSource)
+        public static (Vector3 position, Quaternion rotation, bool valid) AlignShadow(this SnapPreview shadow, Chunk chunkSource)
         {
             var connections = chunkSource.GetConnections();
             connections = FilterOutCollinear(connections);
@@ -24,7 +25,7 @@ namespace Blocks
                 var thisSocket = connections[0].thisSocket;
                 var otherSocket = connections[0].otherSocket;
 
-                var (position1, rotation1) = shadow.GetShadowAlign(thisSocket, otherSocket, chunkSource.transform);
+                var (position1, rotation1) = shadow.AlignShadowSingle(thisSocket, otherSocket, chunkSource.transform);
                 return (position1, rotation1, true);
             }
 
@@ -33,7 +34,7 @@ namespace Blocks
             var thisSocketB = connections[1].thisSocket;
             var otherSocketB = connections[1].otherSocket;
 
-            var (position, rotation) =  shadow.GetShadowAlign(thisSocketA, thisSocketB, otherSocketA, otherSocketB, chunkSource.transform);
+            var (position, rotation) =  shadow.AlignShadow(thisSocketA, thisSocketB, otherSocketA, otherSocketB, chunkSource.transform);
             return (position, rotation, true);
         }
 
@@ -73,23 +74,51 @@ namespace Blocks
             return output.ToArray();
         }
 
-        private static (Vector3 position, Quaternion rotation) GetShadowAlign(this SnapPreview shadow, Transform thisA, Transform otherA, Transform blockSource)
+        private static (Vector3 position, Quaternion rotation) AlignShadowSingle(this SnapPreview shadow, Transform thisA, Transform otherA, Transform blockSource)
         {
+            var possibleDirs = new[] {
+                (0, otherA.forward.normalized),
+                (1, -otherA.forward.normalized),
+                (2, otherA.right.normalized),
+                (3, -otherA.right.normalized)
+            };
+
+            var closestDirection = possibleDirs.OrderByDescending(p => p.Item2.Angle(thisA.right.normalized)).First().Item1;
+            
             var thisDir = thisA.right.normalized;
             var otherDir = otherA.right.normalized;
+
+            switch (closestDirection)
+            {
+                case 0:
+                    otherDir = otherA.forward.normalized;
+                    break;
+                case 1:
+                    otherDir = -otherA.forward.normalized;
+                    break;
+                case 2:
+                    otherDir = otherA.right.normalized;
+                    break;
+                case 3:
+                    otherDir = -otherA.right.normalized;
+                    break;
+            }
+
+            // TODO Direction has to be inverted? Maybe its because the different default direction of female/male socket
+            otherDir = -otherDir;
             
-            return shadow.GetShadowAlign(thisA, thisDir, otherA, otherDir, blockSource);
+            return shadow.AlignShadow(thisA, thisDir, otherA, -otherDir, blockSource);
         }
 
-        private static (Vector3 position, Quaternion rotation) GetShadowAlign(this SnapPreview shadow, Transform thisA, Transform thisB, Transform otherA, Transform otherB, Transform blockSource)
+        private static (Vector3 position, Quaternion rotation) AlignShadow(this SnapPreview shadow, Transform thisA, Transform thisB, Transform otherA, Transform otherB, Transform blockSource)
         {
             var thisDir = (thisB.position - thisA.position).normalized;
             var otherDir = (otherB.position - otherA.position).normalized;
 
-            return shadow.GetShadowAlign(thisA, thisDir, otherA, otherDir, blockSource);
+            return shadow.AlignShadow(thisA, thisDir, otherA, otherDir, blockSource);
         }
         
-        private static (Vector3 position, Quaternion rotation) GetShadowAlign(this SnapPreview shadow, Transform thisA, Vector3 thisDir, Transform otherA, Vector3 otherDir, Transform blockSource)
+        private static (Vector3 position, Quaternion rotation) AlignShadow(this SnapPreview shadow, Transform thisA, Vector3 thisDir, Transform otherA, Vector3 otherDir, Transform blockSource)
         {
             const bool OLDWAY = false;
             
@@ -115,15 +144,14 @@ namespace Blocks
             }
             else
             {
-                
                 var targetRotation = correction * thisToOtherRotation * blockSource.rotation;
 
-                // TODO Get the resulting position and rotation without touching the transforms
                 var blockSocketLocalPosition = blockSource.InverseTransformPoint(thisA.position);
-                var adjustedWorldPosition = (blockSource.position - shadow.transform.position) + shadow.transform.TransformPoint(blockSocketLocalPosition);
-                var offset = otherA.position - adjustedWorldPosition;
+                var shadowSocketWorldPosition = shadow.transform.TransformPoint(blockSocketLocalPosition);
+                var adjustedWorldPosition = shadowSocketWorldPosition - shadow.transform.position;
+                var targetPosition = otherA.position - adjustedWorldPosition;
             
-                return (blockSource.position + offset, targetRotation);
+                return (targetPosition, targetRotation);
             }
         }
     }

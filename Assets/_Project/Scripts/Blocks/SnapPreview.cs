@@ -116,14 +116,14 @@ namespace Blocks
         
         private (State, (Socket ThisSocket, Socket OtherSocket)[]) Loool()
         {
-            var alignment = this.GetShadowAlign(owner);
-            if (alignment.valid == false)
+            var (position, rotation, valid) = this.AlignShadow(owner);
+            if (valid == false)
             {
                 return (State.NotAligned, null);
             }
 
-            transform.position = alignment.position;
-            transform.rotation = alignment.rotation;
+            transform.position = position;
+            transform.rotation = rotation;
             
             var isValid = IsPositionValid();
             collidersOverllaping.Clear();
