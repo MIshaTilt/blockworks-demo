@@ -33,6 +33,8 @@ namespace Blocks.Builder
                     {
                         var pinMf = pin.AddComponent<MeshFilter>();
                         pinMf.sharedMesh = pinMesh;
+
+                        var pinMr = pin.AddComponent<MeshRenderer>();
                     }
                     var offset2 = new Vector3(x + .5f, 0, z + .5f);
                     pin.transform.position = offset + offset2.Multiply(new Vector3(0.5f, 1, 0.5f)).Snap(0.01f);
