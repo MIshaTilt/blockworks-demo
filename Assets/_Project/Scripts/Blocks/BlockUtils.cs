@@ -73,16 +73,11 @@ namespace Blocks
 
             // Create a new chunk
             var chnk = newParent.AddComponent<Chunk>();
-
-            // Check if block is anchored and set the rigidbody appropriately
-            var isAnchored = chnk.IsAnchored;
-            if (isAnchored == false)
-            {
-            }
+            var snapper = newParent.AddComponent<ChunkSnapper>();
 
             var newRb = newParent.AddComponent<Rigidbody>();
             newRb.interpolation = RigidbodyInterpolation.Interpolate;
-            newRb.isKinematic = isAnchored;
+            newRb.isKinematic = chnk.IsAnchored;
             
             return chnk;
         }
