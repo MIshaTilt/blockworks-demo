@@ -9,7 +9,7 @@ namespace Blocks.Sockets
     {
         [SerializeField] private Block block;
         [SerializeField] private SocketType type;
-        [SerializeField] private float radius = 0.125f;
+        [SerializeField] private float radius = 0.0125f;
         [SerializeField] private bool active = true;
 
         [SerializeField] private Socket connectedSocket;
