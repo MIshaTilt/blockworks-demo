@@ -52,8 +52,12 @@ public class Hand : MonoBehaviour
 
         if (blockCandidate)
         {
-            chunkHeld = blockCandidate.GetComponentInParent<Chunk>();
-            chunkHeld.GetComponent<ChunkSnapper>().BeginSnap();
+            var chunk = blockCandidate.GetComponentInParent<Chunk>();
+            if (chunk.GetComponent<Rigidbody>().isKinematic == false)
+            {
+                chunkHeld = chunk;
+                chunkHeld.GetComponent<ChunkSnapper>().BeginSnap();
+            }
         }
         else
         {
