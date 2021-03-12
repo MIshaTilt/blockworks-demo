@@ -49,65 +49,6 @@ namespace Blocks
                     throw new ArgumentOutOfRangeException();
             }
         }
-        //  private void Update()
-        // {
-        //     var alignment = this.GetShadowAlign(owner);
-        //     if (alignment.valid == false)
-        //     {
-        //         Visible = false;
-        //         ColorBlock(false);
-        //         Snap = new (Socket ThisSocket, Socket OtherSocket)[0];
-        //         return;
-        //     }
-        //
-        //     transform.position = alignment.position;
-        //     transform.rotation = alignment.rotation;
-        //     
-        //     var isValid = IsPositionValid();
-        //     collidersOverllaping.Clear();
-        //
-        //     if (isValid == false)
-        //     {
-        //         Visible = true;
-        //         ColorBlock(false);
-        //         Snap = new (Socket ThisSocket, Socket OtherSocket)[0];
-        //         return;
-        //     }
-        //     
-        //     var blockSockets = owner.GetComponentsInChildren<Socket>().ToSet();
-        //
-        //     var cloneSockets = GetComponentsInChildren<Socket>();
-        //     var candidates = cloneSockets
-        //         .Select(s => (ThisSocket: s, OtherSocket: s.Trigger().FirstOrDefault()))
-        //         .Where(pair => pair.OtherSocket != null)
-        //         .Where(pair => blockSockets.Contains(pair.OtherSocket) == false)
-        //         .ToArray();
-        //
-        //     Snap = candidates
-        //         .Where(pair =>
-        //         {
-        //             var (thisSocket, otherSocket) = pair;
-        //             var distance = otherSocket.transform.position.Distance(thisSocket.transform.position);
-        //             return distance < LockDistanceEpsilon;
-        //         })
-        //         .Select(pair =>
-        //         {
-        //             var (thisSocket, otherSocket) = pair;
-        //             return (cloneToBlockMapping[thisSocket], otherSocket);
-        //         })
-        //         .ToArray();
-        //
-        //     if (Snap.Length < minContactPoint)
-        //     {
-        //         ColorBlock(false);
-        //         Visible = false;
-        //         Snap = new (Socket ThisSocket, Socket OtherSocket)[0];
-        //         return;
-        //     }
-        //
-        //     Visible = true;
-        //     ColorBlock(true);
-        // }
 
         private enum State
         {
@@ -258,35 +199,9 @@ namespace Blocks
             }
         }
 
-
         private class SocketTag : MonoBehaviour
         {
             public string id;
-        }
-
-        private void OnDrawGizmos()
-        {
-            // var colors = new[]
-            // {
-            //     Color.red, Color.green, Color.blue,
-            //     Color.yellow, Color.cyan, Color.magenta,
-            //     Color.white, Color.black
-            // };
-            //
-            // var connections = owner.GetConnections();
-            // var nonCollinear = FilterOutCollinear(connections);
-            //
-            // for (var i = 0; i < connections.Length; i++)
-            // {
-            //     var connection = connections[i];
-            //     var from = connection.thisSocket.transform.position;
-            //     var to = connection.otherSocket.transform.position;
-            //     
-            //     Gizmos.color = nonCollinear.Contains(connection) ? colors[i % colors.Length] : Color.grey;
-            //     Gizmos.DrawSphere(from, 0.01f);
-            //     Gizmos.DrawSphere(to, 0.01f);
-            //     Gizmos.DrawLine(from, to);
-            // }
         }
     }
 }
