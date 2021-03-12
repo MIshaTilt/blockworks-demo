@@ -8,6 +8,7 @@ public class Hand : MonoBehaviour
 {
     private bool triggerHeld;
     private Chunk chunkHeld;
+    [SerializeField] private Spawner spawner;
 
     private void Update()
     {
@@ -39,6 +40,12 @@ public class Hand : MonoBehaviour
                 triggerHeld = false;
                 GrabEnd();
             }
+        }
+        
+        
+        if (device.GetFeatureValue(CommonUsages.primaryButton) == true)
+        {
+            spawner.Spawn();
         }
     }
 
