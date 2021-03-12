@@ -11,7 +11,7 @@ public class Hand : MonoBehaviour
 
     private void Update()
     {
-        var leftHandedDevices = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Left | InputDeviceCharacteristics.Controller;
+        var leftHandedDevices = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Right | InputDeviceCharacteristics.Controller;
         var device = leftHandedDevices.GetDevice();
 
 
