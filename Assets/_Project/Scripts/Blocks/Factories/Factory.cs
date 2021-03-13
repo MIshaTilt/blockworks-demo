@@ -50,6 +50,8 @@ namespace Blocks.Factories
             go.transform.SetParent(chunkGo.transform, false);
 
             var rb = chunkGo.AddComponent<Rigidbody>();
+            rb.interpolation = RigidbodyInterpolation.Interpolate;
+            
             var snapper = chunkGo.AddComponent<ChunkSnapper>();
             
             return chunkGo;
