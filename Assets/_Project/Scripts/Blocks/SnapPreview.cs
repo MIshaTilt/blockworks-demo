@@ -40,6 +40,11 @@ namespace Blocks
                     Snap = new (Socket ThisSocket, Socket OtherSocket)[0];
                     material.color = Color.yellow.SetAlpha(.25f);
                     break;
+                case State.OneSocketAlignment:
+                    Visible = true;
+                    Snap = socketPairs;
+                    material.color = Color.magenta.SetAlpha(.25f);
+                    break;
                 case State.Ok:
                     Visible = true;
                     Snap = socketPairs;
@@ -52,7 +57,7 @@ namespace Blocks
 
         private enum State
         {
-            NotAligned, Blocking, SocketsTooFar, Ok
+            NotAligned, Blocking, SocketsTooFar, OneSocketAlignment, Ok
         }
         
         private (State, (Socket ThisSocket, Socket OtherSocket)[]) Loool()
@@ -76,10 +81,13 @@ namespace Blocks
             
             var blockSockets = owner.GetComponentsInChildren<Socket>().ToSet();
 
-            var snap = GetComponentsInChildren<Socket>()
+            var connectionCandidates = GetComponentsInChildren<Socket>()
                 .Select(s => (ThisSocket: s, OtherSocket: s.Trigger().FirstOrDefault()))
                 .Where(pair => pair.OtherSocket != null)
                 .Where(pair => blockSockets.Contains(pair.OtherSocket) == false)
+                .ToList();
+            
+            var snap = connectionCandidates
                 .Where(pair =>
                 {
                     var (thisSocket, otherSocket) = pair;
@@ -95,7 +103,14 @@ namespace Blocks
 
             if (snap.Length < minContactPoint)
             {
-                return (State.SocketsTooFar, null);
+                if (connectionCandidates.Count == snap.Length)
+                {
+                    return (State.OneSocketAlignment, snap);
+                }
+                else
+                {
+                    return (State.SocketsTooFar, null);
+                }
             }
 
             return (State.Ok, snap);
