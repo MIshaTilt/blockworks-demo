@@ -11,7 +11,9 @@ namespace Blocks
         public static (Vector3 position, Quaternion rotation, int connections, bool valid) AlignShadow(this SnapPreview shadow, Chunk chunkSource)
         {
             var connections = chunkSource.GetConnections();
-            connections = FilterOutCollinear(connections);
+            
+            // TODO do I need to filter out collinear
+            // connections = FilterOutCollinear(connections);
 
             // Chose two closes connections and choose origin and alignment.
             // If only one connection is available use that one.

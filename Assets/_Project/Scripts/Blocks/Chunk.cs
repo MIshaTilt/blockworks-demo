@@ -85,6 +85,11 @@ namespace Blocks
             return groups;
         }
 
+        public List<Chunk> Disconnect(IEnumerable<Block> blocks)
+        {
+            return BlockUtils.DisconnectChunk(this, blocks);
+        }
+
         public bool IsAnchored => GetComponentsInChildren<Block>().Any(l => l.IsAnchored);
 
         private void OnDrawGizmosSelected()

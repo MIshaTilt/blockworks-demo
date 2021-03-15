@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Blocks;
@@ -7,10 +8,26 @@ public class TestSnap : MonoBehaviour
 {
     private void Start()
     {
-        foreach (var snapper in FindObjectsOfType<ChunkSnapper>())
+        foreach (var tag in FindObjectsOfType<TestSnapTag>())
         {
-            if (snapper.name.ToLowerInvariant().Contains("snap"))
-                snapper.BeginSnap();
+            switch (tag.type)
+            {
+                case SnapType.Preview:
+                    tag.GetComponent<ChunkSnapper>().BeginSnap();
+                    break;
+                case SnapType.Snap:
+                    tag.GetComponent<ChunkSnapper>().BeginSnap();
+                    tag.GetComponent<ChunkSnapper>().EndSnap();
+                    break;
+                case SnapType.Disconnect:
+                    var block = tag.GetComponentInChildren<Block>();
+                    tag.GetComponent<ChunkSnapper>().BeginSnap();
+                    tag.GetComponent<ChunkSnapper>().EndSnap();
+                    block.GetComponentInParent<Chunk>().Disconnect(new[] {block});
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
     }
 }

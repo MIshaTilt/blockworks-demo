@@ -134,6 +134,7 @@ namespace Blocks
         {
             gameObject.SetActive(true);
             SwitchLayerInChildren(transform, "Default", "Snap");
+            Update();
         }
 
         public void EndSnap()
