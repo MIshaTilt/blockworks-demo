@@ -62,7 +62,7 @@ namespace Blocks
         
         private (State, (Socket ThisSocket, Socket OtherSocket)[]) Loool()
         {
-            var (position, rotation, valid) = this.AlignShadow(owner);
+            var (position, rotation, connections, valid) = this.AlignShadow(owner);
             if (valid == false)
             {
                 return (State.NotAligned, null);
@@ -103,7 +103,7 @@ namespace Blocks
 
             if (snap.Length < minContactPoint)
             {
-                if (connectionCandidates.Count == snap.Length)
+                if (connections == snap.Length)
                 {
                     return (State.OneSocketAlignment, snap);
                 }

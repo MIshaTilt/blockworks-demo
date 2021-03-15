@@ -169,6 +169,7 @@ MonoBehaviour:
   blocks:
   - {fileID: 8527469098863650983, guid: 2bc0d09843132c346b00923005d7c12d, type: 3}
   - {fileID: 2856670267794487932, guid: 11eb7b9356c0f5d47854f762f4197783, type: 3}
+  - {fileID: 7556491612923697022, guid: 40409f7bc0d24f94a8072950ed59bc29, type: 3}
 --- !u!1 &563893055
 GameObject:
   m_ObjectHideFlags: 0
@@ -232,7 +233,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e894bac1ecbe4f0898e1f42ee44b1179, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sphere: {fileID: 1911005307}
   spawner: {fileID: 461411845}
+  state: 0
 --- !u!1 &633812601
 GameObject:
   m_ObjectHideFlags: 0

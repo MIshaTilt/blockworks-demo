@@ -8,7 +8,7 @@ namespace Blocks
 {
     public static class ShadowExtensions
     {
-        public static (Vector3 position, Quaternion rotation, bool valid) AlignShadow(this SnapPreview shadow, Chunk chunkSource)
+        public static (Vector3 position, Quaternion rotation, int connections, bool valid) AlignShadow(this SnapPreview shadow, Chunk chunkSource)
         {
             var connections = chunkSource.GetConnections();
             connections = FilterOutCollinear(connections);
@@ -17,7 +17,7 @@ namespace Blocks
             // If only one connection is available use that one.
             if (connections.Length == 0)
             {
-                return (default, default, false);
+                return (default, default, 0, false);
             }
 
             if (connections.Length == 1)
@@ -26,7 +26,7 @@ namespace Blocks
                 var otherSocket = connections[0].otherSocket;
 
                 var (position1, rotation1) = shadow.AlignShadowSingle(thisSocket, otherSocket, chunkSource.transform);
-                return (position1, rotation1, true);
+                return (position1, rotation1, 1, true);
             }
 
             var thisSocketA = connections[0].thisSocket;
@@ -35,7 +35,7 @@ namespace Blocks
             var otherSocketB = connections[1].otherSocket;
 
             var (position, rotation) =  shadow.AlignShadow(thisSocketA, thisSocketB, otherSocketA, otherSocketB, chunkSource.transform);
-            return (position, rotation, true);
+            return (position, rotation, connections.Length, true);
         }
 
         private static (Transform thisSocket, Transform otherSocket)[] FilterOutCollinear((Transform thisSocket, Transform otherSocket)[] connections)
