@@ -12,8 +12,9 @@ namespace Blocks
         {
             var connections = chunkSource.GetConnections();
             
-            // TODO do I need to filter out collinear
-            // connections = FilterOutCollinear(connections);
+            // TODO refactor + test
+            connections = FilterOutCollinear(connections);
+            // connections = FilterOutClose(connections);
 
             // Chose two closes connections and choose origin and alignment.
             // If only one connection is available use that one.
@@ -43,33 +44,38 @@ namespace Blocks
         private static (Transform thisSocket, Transform otherSocket)[] FilterOutCollinear((Transform thisSocket, Transform otherSocket)[] connections)
         {
             var output = new List<(Transform thisSocket, Transform otherSocket)>();
-            foreach (var connection1 in connections)
+            var marked = new bool[connections.Length];
+            for (var i = 0; i < connections.Length; i++)
             {
                 var isCollinear = false;
-                foreach (var connection2 in connections)
+                for (var j = 0; j < connections.Length; j++)
                 {
-                    if (connection1 != connection2)
+                    if (connections[i] != connections[j])
                     {
-                        // Chose two closes connections and choose origin and alignment.
-                        var thisSocketA = connection1.thisSocket;
-                        var otherSocketA = connection1.otherSocket;
-                        var thisSocketB = connection2.thisSocket;
-                        var otherSocketB = connection2.otherSocket;
-            
-                        var directionA = otherSocketA.up;
-                        var directionB = otherSocketA.position - otherSocketB.position;
-
-                        // Check if the directions are collinear
-                        if (Math.Abs(directionA.Dot(directionB)) > 0.0001f)
+                        if (marked[i] == false && marked[j] == false)
                         {
-                            isCollinear = true;
+                            // Chose two closes connections and choose origin and alignment.
+                            var thisSocketA = connections[i].thisSocket;
+                            var otherSocketA = connections[i].otherSocket;
+                            var thisSocketB = connections[j].thisSocket;
+                            var otherSocketB = connections[j].otherSocket;
+
+                            var directionA = otherSocketA.up;
+                            var directionB = otherSocketA.position - otherSocketB.position;
+
+                            // Check if the directions are collinear
+                            if (Math.Abs(directionA.Dot(directionB)) > 0.0001f)
+                            {
+                                marked[i] = true;
+                                isCollinear = true;
+                            }
                         }
                     }
                 }
 
                 if (isCollinear == false)
                 {
-                    output.Add(connection1);
+                    output.Add(connections[i]);
                 }
             }
 
