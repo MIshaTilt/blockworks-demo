@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Blocks.Sockets;
@@ -28,27 +29,27 @@ namespace Blocks
                 case State.NotAligned:
                     Visible = true;
                     Snap = new (Socket ThisSocket, Socket OtherSocket)[0];
-                    material.color = Color.green.SetAlpha(.25f);
+                    material.color = Color.green.SetAlpha(.3f);
                     break;
                 case State.Blocking:
                     Visible = true;
                     Snap = new (Socket ThisSocket, Socket OtherSocket)[0];
-                    material.color = Color.red.SetAlpha(.25f);
+                    material.color = Color.red.SetAlpha(.3f);
                     break;
                 case State.SocketsTooFar:
                     Visible = true;
                     Snap = new (Socket ThisSocket, Socket OtherSocket)[0];
-                    material.color = Color.yellow.SetAlpha(.25f);
+                    material.color = Color.yellow.SetAlpha(.3f);
                     break;
                 case State.OneSocketAlignment:
                     Visible = true;
                     Snap = socketPairs;
-                    material.color = Color.magenta.SetAlpha(.25f);
+                    material.color = Color.magenta.SetAlpha(.3f);
                     break;
                 case State.Ok:
                     Visible = true;
                     Snap = socketPairs;
-                    material.color = Color.blue.SetAlpha(.25f);
+                    material.color = Color.blue.SetAlpha(.3f);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -71,14 +72,6 @@ namespace Blocks
             transform.position = position;
             transform.rotation = rotation;
             
-            var isValid = IsPositionValid();
-            collidersOverllaping.Clear();
-
-            if (isValid == false)
-            {
-                return (State.Blocking, null);
-            }
-            
             var blockSockets = owner.GetComponentsInChildren<Socket>().ToSet();
 
             var connectionCandidates = GetComponentsInChildren<Socket>()
@@ -86,6 +79,11 @@ namespace Blocks
                 .Where(pair => pair.OtherSocket != null)
                 .Where(pair => blockSockets.Contains(pair.OtherSocket) == false)
                 .ToList();
+
+            if (IsColliding(connectionCandidates.Select(c => c.OtherSocket)))
+            {
+                return (State.Blocking, null);
+            }
             
             var snap = connectionCandidates
                 .Where(pair =>
@@ -116,11 +114,31 @@ namespace Blocks
             return (State.Ok, snap);
         }
 
-        private bool IsPositionValid()
+        private bool IsColliding(IEnumerable<Socket> connectionCandidates)
         {
-            return collidersOverllaping
-                .Select(c => c.GetComponentInParent<Chunk>())
-                .None(b => b != owner);
+            var chunkSnapCandidates = connectionCandidates
+                .Select(o => o.GetComponentInParent<Chunk>())
+                .ToSet();
+
+            for (var i = 0; i < colliding.Count; i++)
+            {
+                var collidingChunk = colliding[i].GetComponentInParent<Chunk>();
+                if (collidingChunk)
+                {
+                    if (chunkSnapCandidates.Contains(collidingChunk))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private void FixedUpdate()
+        {
+            colliding = collidersOverllaping.ToList();
+            collidersOverllaping.Clear();
         }
 
         private HashSet<Collider> collidersOverllaping = new HashSet<Collider>();
@@ -156,6 +174,7 @@ namespace Blocks
         }
 
         private bool? visible;
+        private List<Collider> colliding = new List<Collider>();
 
         public bool Visible
         {
