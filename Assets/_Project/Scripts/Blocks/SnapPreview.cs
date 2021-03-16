@@ -99,13 +99,14 @@ namespace Blocks
                 })
                 .ToArray();
 
+            if (connections < minContactPoint)
+            {
+                return (State.OneSocketAlignment, snap);
+            }
+            
             if (snap.Length < minContactPoint)
             {
-                if (connections == snap.Length)
-                {
-                    return (State.OneSocketAlignment, snap);
-                }
-                else
+                if (connections != snap.Length)
                 {
                     return (State.SocketsTooFar, null);
                 }
