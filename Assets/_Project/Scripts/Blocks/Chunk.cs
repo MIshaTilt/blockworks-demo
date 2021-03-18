@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Blocks.Sockets;
@@ -90,7 +91,9 @@ namespace Blocks
             return BlockUtils.DisconnectChunk(this, blocks);
         }
 
-        public bool IsAnchored => GetComponentsInChildren<Block>().Any(l => l.IsAnchored);
+        public bool IsAnchored => Blocks.Any(l => l.IsAnchored);
+        
+        public IEnumerable<Block> Blocks => GetComponentsInChildren<Block>();
 
         private void OnDrawGizmosSelected()
         {

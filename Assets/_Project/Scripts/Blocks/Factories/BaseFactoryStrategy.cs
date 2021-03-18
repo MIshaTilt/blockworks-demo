@@ -38,7 +38,7 @@ namespace Blocks.Factories
                         var pinMr = pin.AddComponent<MeshRenderer>();
                     }
                     var offset2 = new Vector3(x + .5f, 0, z + .5f);
-                    pin.transform.position = offset + offset2.Multiply(new Vector3(0.05f, 1, 0.05f)).Snap(0.001f);
+                    pin.transform.position = offset + offset2.Multiply(new Vector3(0.05f, 1, 0.05f)).RoundTo(0.05f, 1, 0.05f);
                     owner.AddSocket(socket);
                 }
             }

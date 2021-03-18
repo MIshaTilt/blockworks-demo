@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blocks.Sockets;
@@ -8,78 +7,47 @@ using Object = UnityEngine.Object;
 
 namespace Blocks
 {
-    public class BlockUtils
+    public static class BlockUtils
     {
-        public static Chunk ConnectBlocks((Socket ThisSocket, Socket OtherSocket)[] result)
+        public static Chunk ConnectBlocks((Socket ThisSocket, Socket OtherSocket)[] socketPair)
         {
-            // Connect The sockets
-            foreach (var (thisSocket, otherSocket) in result)
+            var chunks = new HashSet<Chunk>();
+            foreach (var (thisSocket, otherSocket) in socketPair)
             {
                 thisSocket.Connect(otherSocket);
             }
 
-            return ConnectGroups(result.First().ThisSocket.Block.GetAllConnectedBlocks());
-        }
-
-        private static Chunk ConnectGroups(IEnumerable<Block> blocks)
-        {
-            // Get all connected blocks
-            var allGroups = blocks
-                .Select(socket => socket.GetComponentInParent<Chunk>())
-                .OrderByDescending(group => group.GetComponent<Rigidbody>().isKinematic)
-                .Distinct()
-                .ToList();
-
-            var allBlocks = allGroups.SelectMany(b => b.transform.Children()).ToList();
-        
-            foreach (var group in allGroups)
+            foreach (var (thisSocket, otherSocket) in socketPair)
             {
-                foreach (var block in group.GetComponentsInChildren<Block>())
+                chunks.Add(thisSocket.Block.Chunk);
+                chunks.Add(otherSocket.Block.Chunk);
+            }
+
+            var targetChunk = chunks.FirstOrDefault(c => c.IsAnchored) ?? chunks.First();
+
+            foreach (var chunk in chunks)
+            {
+                if (chunk != targetChunk)
                 {
-                    block.Chunk = null;
+                    foreach (var block in chunk.Blocks)
+                    {
+                        block.transform.SetParent(targetChunk.transform, true);
+                        FixBlockOffset(block);
+                        block.Chunk = targetChunk;
+                    }
+
+                    Object.Destroy(chunk.gameObject);
                 }
             }
-            
-            var newGroup = CreateGroup(allBlocks, allGroups[0].transform);
 
-            foreach (var group in allGroups)
-            {
-                Object.DestroyImmediate(group.gameObject);
-            }
-            
-            foreach (var block in newGroup.GetComponentsInChildren<Block>())
-            {
-                block.Chunk = newGroup;
-            }
-            
-            return newGroup;
+            return targetChunk;
         }
 
-        private static Chunk CreateGroup(IEnumerable<Component> blocks, Transform blockGroup)
+        public static void FixBlockOffset(Block block)
         {
-            // Reparent blocks
-            var newParent = new GameObject();
-            newParent.transform.SetParent(blockGroup.parent);
-            newParent.transform.CopyLocalFrom(blockGroup);
-
-            foreach (var link in blocks)
-            {
-                link.transform.SetParent(newParent.transform, true);
-
-                // Snap position & rotation
-                link.transform.localPosition = link.transform.localPosition.Snap(0.0001f);
-                link.transform.localRotation = Quaternion.Euler(link.transform.localRotation.eulerAngles.Snap(45f));
-            }
-
-            // Create a new chunk
-            var chnk = newParent.AddComponent<Chunk>();
-            var snapper = newParent.AddComponent<ChunkSnapper>();
-
-            var newRb = newParent.AddComponent<Rigidbody>();
-            newRb.interpolation = RigidbodyInterpolation.Interpolate;
-            newRb.isKinematic = chnk.IsAnchored;
-            
-            return chnk;
+            var transform = block.transform;
+            transform.localPosition = transform.localPosition.RoundTo(0.05f, 0.02f, 0.05f);
+            transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles.RoundTo(90, 90, 90));
         }
 
         public static List<Chunk> DisconnectChunk(Chunk group, IEnumerable<Block> chunk)
@@ -91,8 +59,7 @@ namespace Blocks
                 .SplitBy(chunk.ToSet())
                 .Select((part, i) => 
                 {
-                    var currentGroup = part.First().GetComponentInParent<Chunk>().gameObject;
-                    var newGroup = CreateGroup(part, currentGroup.transform);;
+                    var newGroup = CreateGroup(part);
                     newGroup.name = $"{group.name} [{i}]";
                     return newGroup;
                 })
@@ -101,6 +68,32 @@ namespace Blocks
             Object.Destroy(group.gameObject);
 
             return newBlocks;
+        }
+
+        private static Chunk CreateGroup(IEnumerable<Block> blocks)
+        {
+            // Reparent blocks
+            var newParent = new GameObject();
+            newParent.transform.position = blocks.First().transform.position;
+            newParent.transform.rotation = blocks.First().transform.rotation;
+
+            var chnk = newParent.AddComponent<Chunk>();
+            
+            foreach (var link in blocks)
+            {
+                link.transform.SetParent(newParent.transform, true);
+                FixBlockOffset(link);
+                link.Chunk = chnk;
+            }
+
+            // Create a new chunk
+            var snapper = newParent.AddComponent<ChunkSnapper>();
+
+            var newRb = newParent.AddComponent<Rigidbody>();
+            newRb.interpolation = RigidbodyInterpolation.Interpolate;
+            newRb.isKinematic = chnk.IsAnchored;
+            
+            return chnk;
         }
     }
 }

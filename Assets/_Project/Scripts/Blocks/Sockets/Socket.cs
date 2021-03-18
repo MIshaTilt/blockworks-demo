@@ -104,8 +104,14 @@ namespace Blocks.Sockets
             trigger.enabled = active;
         }
 
+        [SerializeField] private bool drawGizmos = true;
         private void OnDrawGizmos()
         {
+            if (drawGizmos == false)
+            {
+                return;
+            }
+            
             if (active == false)
             {
                 return;
