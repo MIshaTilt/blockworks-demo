@@ -163,7 +163,7 @@ namespace Blocks
                 // Copy the transform back
                 owner.transform.CopyWorldFrom(transform);
                 
-                var newBlock = BlockUtils.ConnectBlocks(Snap);
+                var newBlock = ChunkFactory.Connect(Snap);
                 SwitchLayerInChildren(newBlock.transform, "Snap", "Default");
             }
             else

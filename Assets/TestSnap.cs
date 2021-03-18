@@ -23,7 +23,7 @@ public class TestSnap : MonoBehaviour
                     var block = tag.GetComponentInChildren<Block>();
                     tag.GetComponent<ChunkSnapper>().BeginSnap();
                     tag.GetComponent<ChunkSnapper>().EndSnap();
-                    block.GetComponentInParent<Chunk>().Disconnect(new[] {block});
+                    ChunkFactory.Disconnect(block.Chunk, new[] {block});
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();

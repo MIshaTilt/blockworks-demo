@@ -54,43 +54,6 @@ namespace Blocks
                 .ToArray();
         }
 
-        public List<ISet<Block>> SplitBy(ISet<Block> chunk)
-        {
-            var all = GetComponentInChildren<Block>().GetAllConnectedBlocks().ToList();
-            var rest = all.Except(chunk).ToList();
-            foreach (var link in rest)
-            {
-                foreach (var socket in link.Sockets)
-                {
-                    if (socket.ConnectedSocket != null)
-                    {
-                        if (chunk.Contains(socket.ConnectedSocket.Block))
-                        {
-                            socket.Disconnect();
-                        }
-                    }
-                }
-            }
-            var groups = new List<ISet<Block>>();
-            
-            groups.Add(chunk);
-            
-            while (rest.Any())
-            {
-                var first = rest.First();
-                var groupA = first.GetAllConnectedBlocks(chunk);
-                rest = rest.Except(groupA).ToList();
-                groups.Add(groupA);
-            }
-
-            return groups;
-        }
-
-        public List<Chunk> Disconnect(IEnumerable<Block> blocks)
-        {
-            return BlockUtils.DisconnectChunk(this, blocks);
-        }
-
         public bool IsAnchored => Blocks.Any(l => l.IsAnchored);
         
         public IEnumerable<Block> Blocks => GetComponentsInChildren<Block>();
@@ -129,6 +92,77 @@ namespace Blocks
             var centerOfMass = transform.InverseTransformPoint(GetComponent<Rigidbody>().centerOfMass);
             Gizmos.color = Color.magenta;
             Gizmos.DrawSphere(centerOfMass, .0025f);
+        }
+
+        public void Connect((Socket ThisSocket, Socket OtherSocket)[] socketPairs, IEnumerable<Chunk> chunks)
+        {
+            ConnectSockets(socketPairs);
+            ConnectChunks(chunks);
+        }
+
+        private void ConnectSockets(IEnumerable<(Socket ThisSocket, Socket OtherSocket)> socketPairs)
+        {
+            foreach (var (thisSocket, otherSocket) in socketPairs)
+            {
+                thisSocket.Connect(otherSocket);
+            }
+        }
+
+        private void ConnectChunks(IEnumerable<Chunk> chunks)
+        {
+            foreach (var chunk in chunks)
+            {
+                foreach (var block in chunk.Blocks)
+                {
+                    block.ConnectTo(this);
+                }
+
+                Destroy(chunk.gameObject);
+            }
+        }
+
+        public void Disconnect(IEnumerable<Socket> sockets, IEnumerable<IEnumerable<Block>> groups)
+        {
+            DisconnectSockets(sockets);
+            DisconnectChunks(groups);
+        }
+        
+        private void DisconnectSockets(IEnumerable<Socket> sockets)
+        {
+            foreach (var socket in sockets)
+            {
+                socket.Disconnect();
+            }
+        }
+
+        private void DisconnectChunks(IEnumerable<IEnumerable<Block>> groups)
+        {
+            foreach (var group in groups)
+            {
+                var chunk = CreateChunk();
+                
+                // Align the chunk origin with first block
+                var firstBlockTransform = group.First().transform;
+                chunk.transform.position = firstBlockTransform.position;
+                chunk.transform.rotation = firstBlockTransform.rotation;
+            
+                foreach (var block in group)
+                {
+                    block.ConnectTo(chunk);
+                }
+            }
+        }
+        
+        private Chunk CreateChunk()
+        {
+            var chunk = new GameObject().AddComponent<Chunk>();
+            
+            var snapper = chunk.gameObject.AddComponent<ChunkSnapper>();
+            var chunkRb = chunk.gameObject.AddComponent<Rigidbody>();
+            chunkRb.interpolation = RigidbodyInterpolation.Interpolate;
+            chunkRb.isKinematic = chunk.IsAnchored;
+            
+            return chunk;
         }
     }
 }

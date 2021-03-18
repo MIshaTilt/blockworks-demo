@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Blocks.Sockets;
+using ElasticSea.Framework.Extensions;
 using UnityEngine;
 
 namespace Blocks
@@ -17,18 +18,10 @@ namespace Blocks
         public bool IsAnchored;
         public BlockMaterial BlockMaterial;
 
-        public Action<Chunk> OnBlockConnected = group => { };
-        public Action<Chunk> OnBlockDisconnected = group => { };
-
         public Chunk Chunk
         {
             get => chunk;
-            set
-            {
-                if (chunk) OnBlockDisconnected(chunk);
-                chunk = value;
-                if (chunk) OnBlockConnected(chunk);
-            }
+            set => chunk = value;
         }
 
         private IEnumerable<Block> Connections
@@ -62,11 +55,12 @@ namespace Blocks
             sockets = GetComponentsInChildren<Socket>();
         }
 
-        public HashSet<Block> GetAllConnectedBlocks(ISet<Block> ignore = null)
+        public HashSet<Block> GetAllConnectedBlocks(IEnumerable<Block> ignore = null)
         {
             var allConnections = new HashSet<Block>();
             allConnections.Add(this);
-            GetAllConnectedBlocks(this, allConnections, ignore);
+            var ignoreSet = ignore?.ToSet();
+            GetAllConnectedBlocks(this, allConnections, ignoreSet);
             return allConnections;
         }
 
@@ -110,6 +104,19 @@ namespace Blocks
                     GetAllConnections(connection, allConnections);
                 }
             }
+        }
+
+        public void ConnectTo(Chunk newChunk)
+        {
+            transform.SetParent(newChunk.transform, true);
+            FixBlockOffset();
+            Chunk = newChunk;
+        }
+
+        private void FixBlockOffset()
+        {
+            transform.localPosition = transform.localPosition.RoundTo(0.05f, 0.02f, 0.05f);
+            transform.localRotation = Quaternion.Euler(transform.localRotation.eulerAngles.RoundTo(90, 90, 90));
         }
     }
 }

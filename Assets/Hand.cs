@@ -57,7 +57,7 @@ public class Hand : MonoBehaviour
         var blockCandidate = CheckForBlock();
         if (blockCandidate)
         {
-            var splits = BlockUtils.DisconnectChunk(blockCandidate.GetComponentInParent<Chunk>(), new[] {blockCandidate});
+            ChunkFactory.Disconnect(blockCandidate.Chunk, new[] {blockCandidate});
         }
     }
 
