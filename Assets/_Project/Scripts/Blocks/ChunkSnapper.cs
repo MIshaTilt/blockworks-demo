@@ -9,8 +9,6 @@ namespace Blocks
         
         private ChunkPreview chunkPreview;
 
-        public bool IsSnapping => isSnapping;
-
         public void BeginSnap()
         {
             if (isSnapping == false)
