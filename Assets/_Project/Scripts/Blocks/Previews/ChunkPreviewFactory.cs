@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Blocks.Sockets;
 using ElasticSea.Framework.Extensions;
 using UnityEngine;
@@ -8,56 +9,57 @@ namespace Blocks.Previews
 {
     public class ChunkPreviewFactory
     {
-        private Material material;
-        private Dictionary<Socket, Socket> cloneToBlockMapping;
-
         public static ChunkPreview Build(Chunk chunk)
         {
-            return new ChunkPreviewFactory().BuildInternal(chunk);
-        }
-        
-        private ChunkPreview BuildInternal(Chunk chunk)
-        {
-            material = new Material(Shader.Find("Standard"));
-            material.SetupMaterialWithBlendMode(MaterialExtensions.Mode.Fade);
-            
-            cloneToBlockMapping = new Dictionary<Socket, Socket>();
-            
-            var preview = new GameObject(chunk.name + " Preview");
-            CopyTree(chunk.transform, preview.transform);
+            var chunkPreviewGo = new GameObject($"{chunk.name} Preview");
+            CopyHierarchyAndComponents(chunk.transform, chunkPreviewGo.transform);
 
-            var component = preview.AddComponent<Rigidbody>();
+            var chunkPreview = chunkPreviewGo.AddComponent<ChunkPreview>();
+            chunkPreview.Owner = chunk;
+            chunkPreview.Connector = chunkPreviewGo.AddComponent<PreviewConnector>();
+            
+            // Set all materials to translucent
+            var translucentMat = new Material(Shader.Find("Standard"));
+            translucentMat.SetupMaterialWithBlendMode(MaterialExtensions.Mode.Fade);
+            var renderers = chunkPreviewGo.GetComponentsInChildren<Renderer>();
+            chunkPreview.Renderers = renderers;
+            foreach (var r in renderers)
+            {
+                r.materials = r.materials.Select(m => translucentMat).ToArray();
+            }
+            chunkPreview.Material = translucentMat;
+            
+            // Setup rigidbody
+            var component = chunkPreviewGo.AddComponent<Rigidbody>();
             component.isKinematic = true;
             component.interpolation = RigidbodyInterpolation.Interpolate;
-         
-            var blockClone = preview.AddComponent<ChunkPreview>();
-            blockClone.Owner = chunk;
-            blockClone.Renderers = preview.GetComponentsInChildren<Renderer>();
-            blockClone.Material = material;
-            blockClone.PreviewToRealSocketMap = cloneToBlockMapping;
-            blockClone.Visible = false;
-            blockClone.Connector = preview.AddComponent<PreviewConnector>();
-            blockClone.gameObject.SetActive(false);
 
-            return blockClone;
+            // Link real sockets to preview sockets
+            var chunkSockets = chunk.GetComponentsInChildren<Socket>();
+            var previewSockets = chunkPreviewGo.GetComponentsInChildren<Socket>();
+            chunkPreview.PreviewToRealSocketMap = chunkSockets
+                .Zip(previewSockets, (s0, s1) => (Chunk: s0, Preview: s1))
+                .ToDictionary(tuple => tuple.Preview, tuple => tuple.Chunk);
+
+            return chunkPreview;
         }
         
-        private void CopyTree(Transform from, Transform to)
+        private static void CopyHierarchyAndComponents(Transform from, Transform to)
         {
             CopyComponents(from, to);
             
             foreach (Transform fromChild in from)
             {
                 var toChild = new GameObject().transform;
-                toChild.CopyLocalFrom(fromChild);
                 toChild.SetParent(to, false);
+                toChild.CopyLocalFrom(fromChild);
                 toChild.name = fromChild.name;
 
-                CopyTree(fromChild, toChild);
+                CopyHierarchyAndComponents(fromChild, toChild);
             }
         }
 
-        private void CopyComponents(Transform from, Transform to)
+        private static void CopyComponents(Transform from, Transform to)
         {
             CopyCollider(from, to);
             CopyMeshFilter(from, to);
@@ -65,7 +67,7 @@ namespace Blocks.Previews
             CopySocket(from, to);
         }
 
-        private void CopySocket(Transform from, Transform to)
+        private static void CopySocket(Transform from, Transform to)
         {
             var fromSocket = from.GetComponent<Socket>();
             if (fromSocket)
@@ -74,24 +76,16 @@ namespace Blocks.Previews
                 toSocket.Type = fromSocket.Type;
                 toSocket.Block = fromSocket.Block;
                 toSocket.Active = false;
-                cloneToBlockMapping[toSocket] = fromSocket;
             }
         }
 
-        private void CopyRenderer(Transform from, Transform to)
+        private static void CopyRenderer(Transform from, Transform to)
         {
             var fromRenderer = from.GetComponent<MeshRenderer>();
             if (fromRenderer)
             {
                 var toRenderer = to.gameObject.AddComponent<MeshRenderer>();
-
-                var toMats = new Material[fromRenderer.materials.Length];
-                for (var i = 0; i < toMats.Length; i++)
-                {
-                    toMats[i] = material;
-                }
-
-                toRenderer.materials = toMats;
+                toRenderer.materials = new Material[fromRenderer.materials.Length];
             }
         }
 
