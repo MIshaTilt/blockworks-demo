@@ -1,3 +1,4 @@
+using Blocks.Previews;
 using UnityEngine;
 
 namespace Blocks
@@ -6,7 +7,7 @@ namespace Blocks
     {
         private bool isSnapping;
         
-        private SnapPreview snapPreview;
+        private ChunkPreview chunkPreview;
 
         public bool IsSnapping => isSnapping;
 
@@ -14,8 +15,8 @@ namespace Blocks
         {
             if (isSnapping == false)
             {
-                snapPreview = new SnapPreviewFactory(GetComponent<Chunk>()).Build();
-                snapPreview.BeginSnap();
+                chunkPreview = ChunkPreviewFactory.Build(GetComponent<Chunk>());
+                chunkPreview.BeginSnap();
                 isSnapping = true;
             }
         }
@@ -24,8 +25,8 @@ namespace Blocks
         {
             if (isSnapping)
             {
-                snapPreview.EndSnap();
-                DestroyImmediate(snapPreview.gameObject);
+                chunkPreview.EndSnap();
+                DestroyImmediate(chunkPreview.gameObject);
                 isSnapping = false;
             }
         }

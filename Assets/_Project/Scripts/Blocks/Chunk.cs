@@ -94,13 +94,13 @@ namespace Blocks
             Gizmos.DrawSphere(centerOfMass, .0025f);
         }
 
-        public void Connect((Socket ThisSocket, Socket OtherSocket)[] socketPairs, IEnumerable<Chunk> chunks)
+        public void Connect(IEnumerable<SocketPair> socketPairs, IEnumerable<Chunk> chunks)
         {
             ConnectSockets(socketPairs);
             ConnectChunks(chunks);
         }
 
-        private void ConnectSockets(IEnumerable<(Socket ThisSocket, Socket OtherSocket)> socketPairs)
+        private void ConnectSockets(IEnumerable<SocketPair> socketPairs)
         {
             foreach (var (thisSocket, otherSocket) in socketPairs)
             {

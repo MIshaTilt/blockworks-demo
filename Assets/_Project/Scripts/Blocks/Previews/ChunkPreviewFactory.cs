@@ -4,39 +4,39 @@ using Blocks.Sockets;
 using ElasticSea.Framework.Extensions;
 using UnityEngine;
 
-namespace Blocks
+namespace Blocks.Previews
 {
-    public class SnapPreviewFactory
+    public class ChunkPreviewFactory
     {
         private Material material;
-        private Chunk Chunk;
         private Dictionary<Socket, Socket> cloneToBlockMapping;
 
-        public SnapPreviewFactory(Chunk Chunk)
+        public static ChunkPreview Build(Chunk chunk)
         {
-            this.Chunk = Chunk;
-            
+            return new ChunkPreviewFactory().BuildInternal(chunk);
+        }
+        
+        private ChunkPreview BuildInternal(Chunk chunk)
+        {
             material = new Material(Shader.Find("Standard"));
             material.SetupMaterialWithBlendMode(MaterialExtensions.Mode.Fade);
             
             cloneToBlockMapping = new Dictionary<Socket, Socket>();
-        }
-
-        public SnapPreview Build()
-        {
-            var preview = new GameObject(Chunk.name + " Preview");
-            CopyTree(Chunk.transform, preview.transform);
+            
+            var preview = new GameObject(chunk.name + " Preview");
+            CopyTree(chunk.transform, preview.transform);
 
             var component = preview.AddComponent<Rigidbody>();
             component.isKinematic = true;
             component.interpolation = RigidbodyInterpolation.Interpolate;
          
-            var blockClone = preview.AddComponent<SnapPreview>();
-            blockClone.Owner = Chunk;
+            var blockClone = preview.AddComponent<ChunkPreview>();
+            blockClone.Owner = chunk;
             blockClone.Renderers = preview.GetComponentsInChildren<Renderer>();
             blockClone.Material = material;
-            blockClone.CloneToBlockMapping = cloneToBlockMapping;
+            blockClone.PreviewToRealSocketMap = cloneToBlockMapping;
             blockClone.Visible = false;
+            blockClone.Connector = preview.AddComponent<PreviewConnector>();
             blockClone.gameObject.SetActive(false);
 
             return blockClone;

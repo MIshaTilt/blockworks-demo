@@ -8,7 +8,7 @@ namespace Blocks
 {
     public static class ChunkFactory
     {
-        public static Chunk Connect((Socket ThisSocket, Socket OtherSocket)[] socketPairs)
+        public static Chunk Connect(IEnumerable<SocketPair> socketPairs)
         {
             var allChunks = GetChunksFromSocketPairs(socketPairs);
             var (main, rest) = allChunks.SeparateMainGroup(chunk => chunk.Blocks);
@@ -24,13 +24,15 @@ namespace Blocks
             chunk.Disconnect(sockets, rest);
         }
 
-        private static HashSet<Chunk> GetChunksFromSocketPairs(IEnumerable<(Socket ThisSocket, Socket OtherSocket)> socketPairs)
+        private static HashSet<Chunk> GetChunksFromSocketPairs(IEnumerable<SocketPair> socketPairs)
         {
             var chunks = new HashSet<Chunk>();
             foreach (var (thisSocket, otherSocket) in socketPairs)
             {
-                chunks.Add(thisSocket.Block.Chunk);
-                chunks.Add(otherSocket.Block.Chunk);
+                var thisChunk = thisSocket.Block.Chunk;
+                var otherChunk = otherSocket.Block.Chunk;
+                chunks.Add(thisChunk);
+                chunks.Add(otherChunk);
             }
             return chunks;
         }
