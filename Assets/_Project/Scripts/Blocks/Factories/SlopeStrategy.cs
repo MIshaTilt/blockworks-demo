@@ -25,8 +25,8 @@ namespace Blocks.Factories
             var collider = block.gameObject.AddComponent<BoxCollider>();
             collider.center = mesh.bounds.center;
             collider.size = mesh.bounds.size;
-            
-            AddSocket(block, SocketType.Male, new Vector3(0, 0.02f * (size.y+1), 0), offset.x + 1, size.z);
+
+            AddSocket(block, SocketType.Male, new Vector3(0, 0.02f * (size.y + 1), 0), offset.x + 1, size.z);
             AddSocket(block, SocketType.Female, new Vector3(0, 0, 0), size.x + 1, size.z);
         }
 
@@ -45,15 +45,16 @@ namespace Blocks.Factories
                 {
                     vert.x = vert.x > .051f ? vert.x + (size.x - 1) * .05f : vert.x;
                 }
-                
+
                 if (Mathf.Abs(0.02f - vert.y) < 0.001f)
                 {
                     vert.y = vert.y + offset.y * .02f;
                 }
                 else
                 {
-                    vert.y= vert.y > .021f ? vert.y + (size.y - 1) * .02f : vert.y;
+                    vert.y = vert.y > .021f ? vert.y + (size.y - 1) * .02f : vert.y;
                 }
+
                 vert.z = vert.z > bounds.center.z / 2 ? vert.z + (size.z - 1) * .05f : vert.z;
                 vertices[i] = vert;
             }

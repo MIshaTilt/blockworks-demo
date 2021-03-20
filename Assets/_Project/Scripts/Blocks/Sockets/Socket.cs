@@ -13,7 +13,7 @@ namespace Blocks.Sockets
         [SerializeField] private bool active = true;
 
         [SerializeField] private Socket connectedSocket;
-        
+
         private SphereCollider trigger;
 
         public SocketType Type
@@ -73,7 +73,7 @@ namespace Blocks.Sockets
                 .Where(s => s.Block != Block)
                 .ToArray();
         }
-        
+
         public void Connect(Socket socket)
         {
             if (connectedSocket == null)
@@ -88,7 +88,7 @@ namespace Blocks.Sockets
             connectedSocket = other;
             trigger.enabled = false;
         }
-        
+
         public void Disconnect()
         {
             if (connectedSocket != null)
@@ -97,7 +97,7 @@ namespace Blocks.Sockets
                 DetachSocket();
             }
         }
-        
+
         private void DetachSocket()
         {
             connectedSocket = null;
@@ -105,13 +105,14 @@ namespace Blocks.Sockets
         }
 
         [SerializeField] private bool drawGizmos = true;
+
         private void OnDrawGizmos()
         {
             if (drawGizmos == false)
             {
                 return;
             }
-            
+
             if (active == false)
             {
                 return;
@@ -121,30 +122,30 @@ namespace Blocks.Sockets
             {
                 Gizmos.matrix = transform.localToWorldMatrix;
                 Gizmos.color = Color.gray.SetAlpha(.5f);
-                Gizmos.DrawSphere(Vector3.zero, Radius/2);
+                Gizmos.DrawSphere(Vector3.zero, Radius / 2);
                 return;
             }
-            
+
             var color = Type == SocketType.Male ? Color.blue : Color.red;
             if (block.Chunk.IsAnchored)
             {
                 color = Color.magenta;
             }
-            
+
             var candidates = Trigger();
             if (candidates.Any())
             {
                 Gizmos.color = Color.yellow;
                 Gizmos.matrix = transform.localToWorldMatrix;
                 Gizmos.DrawSphere(Vector3.zero, Radius * .5f);
-                
+
                 foreach (var candidate in candidates)
                 {
                     Gizmos.color = Color.yellow;
                     Gizmos.matrix = Matrix4x4.identity;
                     GizmoUtils.DrawLine(transform.position, candidate.transform.position, 5);
                 }
-                
+
                 Gizmos.matrix = transform.localToWorldMatrix;
                 Gizmos.color = color.SetAlpha(.5f);
                 Gizmos.DrawWireSphere(Vector3.zero, Radius);

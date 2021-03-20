@@ -6,7 +6,7 @@ namespace Blocks
     public class ChunkSnapper : MonoBehaviour
     {
         private bool isSnapping;
-        
+
         private ChunkPreview chunkPreview;
 
         public void BeginSnap()

@@ -15,7 +15,7 @@ namespace Blocks
             main.Connect(socketPairs, rest);
             return main;
         }
-        
+
         public static void Disconnect(Chunk chunk, IEnumerable<Block> blocks)
         {
             var groups = SplitToGroups(chunk, blocks);
@@ -34,6 +34,7 @@ namespace Blocks
                 chunks.Add(thisChunk);
                 chunks.Add(otherChunk);
             }
+
             return chunks;
         }
 

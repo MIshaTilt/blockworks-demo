@@ -10,7 +10,7 @@ namespace Blocks.Previews
     public class PreviewConnector : MonoBehaviour
     {
         private const float MaxSocketDistanceEpsilon = 1E-03f;
-        
+
         public (State state, IEnumerable<SocketPair> socketPairs) CheckForConnection(Chunk chunk)
         {
             var (position, rotation, connections, valid) = AlignShadow(chunk);
@@ -23,14 +23,14 @@ namespace Blocks.Previews
             // Align the preview with possible connection
             transform.position = position;
             transform.rotation = rotation;
-            
+
             var connectionCandidates = GetSocketConnectionCandidates(chunk).ToList();
             if (IsColliding(connectionCandidates.Select(c => c.Other)))
             {
                 // New chunk would collide with itself
                 return (State.BlockingWithItself, new SocketPair[0]);
             }
-            
+
             var closeSocketPairs = FilterOutDistantSockets(connectionCandidates, MaxSocketDistanceEpsilon).ToArray();
             if (closeSocketPairs.Length < 2)
             {
@@ -70,7 +70,7 @@ namespace Blocks.Previews
             var previewSockets = GetComponentsInChildren<Socket>();
 
             return previewSockets
-                .Select(socket => new SocketPair{This = socket, Other = socket.Trigger().FirstOrDefault()})
+                .Select(socket => new SocketPair {This = socket, Other = socket.Trigger().FirstOrDefault()})
                 .Where(socketPair => socketPair.Other != null)
                 .Where(socketPair => realSockets.Contains(socketPair.Other) == false);
         }
@@ -110,11 +110,11 @@ namespace Blocks.Previews
         }
 
         private List<Collider> colliding = new List<Collider>();
-        
+
         public (Vector3 position, Quaternion rotation, int connections, bool valid) AlignShadow(Chunk chunkSource)
         {
             var connections = chunkSource.GetConnections();
-            
+
             // TODO refactor + test
             connections = FilterOutCollinear(connections);
             // connections = FilterOutClose(connections);
@@ -140,11 +140,12 @@ namespace Blocks.Previews
             var thisSocketB = connections[1].thisSocket;
             var otherSocketB = connections[1].otherSocket;
 
-            var (position, rotation) =  AlignShadow(thisSocketA, thisSocketB, otherSocketA, otherSocketB, chunkSource.transform);
+            var (position, rotation) = AlignShadow(thisSocketA, thisSocketB, otherSocketA, otherSocketB, chunkSource.transform);
             return (position, rotation, connections.Length, true);
         }
 
-        private static (Transform thisSocket, Transform otherSocket)[] FilterOutCollinear((Transform thisSocket, Transform otherSocket)[] connections)
+        private static (Transform thisSocket, Transform otherSocket)[] FilterOutCollinear(
+            (Transform thisSocket, Transform otherSocket)[] connections)
         {
             var output = new List<(Transform thisSocket, Transform otherSocket)>();
             var marked = new bool[connections.Length];
@@ -187,7 +188,8 @@ namespace Blocks.Previews
 
         private (Vector3 position, Quaternion rotation) AlignShadowSingle(Transform thisA, Transform otherA, Transform blockSource)
         {
-            var possibleDirs = new[] {
+            var possibleDirs = new[]
+            {
                 (0, otherA.forward.normalized),
                 (1, -otherA.forward.normalized),
                 (2, otherA.right.normalized),
@@ -195,7 +197,7 @@ namespace Blocks.Previews
             };
 
             var closestDirection = possibleDirs.OrderByDescending(p => p.Item2.Angle(thisA.right.normalized)).First().Item1;
-            
+
             var thisDir = thisA.right.normalized;
             var otherDir = otherA.right.normalized;
 
@@ -217,19 +219,21 @@ namespace Blocks.Previews
 
             // TODO Direction has to be inverted? Maybe its because the different default direction of female/male socket
             otherDir = -otherDir;
-            
+
             return AlignShadow(thisA, thisDir, otherA, otherDir, blockSource);
         }
 
-        private (Vector3 position, Quaternion rotation) AlignShadow(Transform thisA, Transform thisB, Transform otherA, Transform otherB, Transform blockSource)
+        private (Vector3 position, Quaternion rotation) AlignShadow(Transform thisA, Transform thisB, Transform otherA,
+            Transform otherB, Transform blockSource)
         {
             var thisDir = (thisB.position - thisA.position).normalized;
             var otherDir = (otherB.position - otherA.position).normalized;
 
             return AlignShadow(thisA, thisDir, otherA, otherDir, blockSource);
         }
-        
-        private (Vector3 position, Quaternion rotation) AlignShadow(Transform thisA, Vector3 thisDir, Transform otherA, Vector3 otherDir, Transform blockSource)
+
+        private (Vector3 position, Quaternion rotation) AlignShadow(Transform thisA, Vector3 thisDir, Transform otherA,
+            Vector3 otherDir, Transform blockSource)
         {
             var thisToOtherRotation = Quaternion.FromToRotation(thisDir, otherDir);
 

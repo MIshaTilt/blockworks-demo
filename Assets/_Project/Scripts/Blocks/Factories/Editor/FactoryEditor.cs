@@ -28,12 +28,16 @@ namespace Blocks.Factories.Editor
                     var built = factory.Build(currentTemplate);
                     factory.transform.DestroyChildren(true);
                     built.transform.SetParent(factory.transform, true);
-                };
-                
+                }
+
+                ;
+
                 if (GUILayout.Button("Show", GUILayout.MaxWidth(50)))
                 {
                     EditorGUIUtility.PingObject(template);
-                };
+                }
+
+                ;
 
                 if (template.name != template.Name)
                 {
@@ -55,7 +59,8 @@ namespace Blocks.Factories.Editor
                     newTemplate.Name += " (1)";
                     newTemplate.prefab = null;
                     newTemplate.meshPrefab = null;
-                    AssetDatabase.CreateAsset(newTemplate, AssetDatabase.GetAssetPath(currentTemplate).Replace(currentTemplate.Name, newTemplate.Name));
+                    AssetDatabase.CreateAsset(newTemplate,
+                        AssetDatabase.GetAssetPath(currentTemplate).Replace(currentTemplate.Name, newTemplate.Name));
                 }
             }
 
@@ -65,12 +70,12 @@ namespace Blocks.Factories.Editor
                 foreach (var template in Templates)
                 {
                     var built = factory.Build(template);
-                    var path  = serializedObject.FindProperty("blockPrefabPath").stringValue;
-                    
-                    var meshPath = template.meshPrefab == null ? 
-                        Path.Combine(path, $"{template.Name}_mesh.asset") : 
-                        AssetDatabase.GetAssetPath(template.meshPrefab);
-                    
+                    var path = serializedObject.FindProperty("blockPrefabPath").stringValue;
+
+                    var meshPath = template.meshPrefab == null
+                        ? Path.Combine(path, $"{template.Name}_mesh.asset")
+                        : AssetDatabase.GetAssetPath(template.meshPrefab);
+
                     AssetDatabase.CreateAsset(built.GetComponentInChildren<MeshFilter>().sharedMesh, meshPath);
                     template.meshPrefab = AssetDatabase.LoadAssetAtPath<Mesh>(meshPath);
 
@@ -78,18 +83,18 @@ namespace Blocks.Factories.Editor
                     {
                         AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(template.meshPrefab), template.Name);
                     }
-                    
-                    var prefabPath = template.prefab == null ? 
-                        Path.Combine(path, $"{template.Name}.prefab") : 
-                        AssetDatabase.GetAssetPath(template.prefab);
-                    
+
+                    var prefabPath = template.prefab == null
+                        ? Path.Combine(path, $"{template.Name}.prefab")
+                        : AssetDatabase.GetAssetPath(template.prefab);
+
                     template.prefab = PrefabUtility.SaveAsPrefabAsset(built, prefabPath);
 
                     if (template.prefab.name != template.Name)
                     {
                         AssetDatabase.RenameAsset(AssetDatabase.GetAssetPath(template.prefab), template.Name);
                     }
-                    
+
                     AssetDatabase.SaveAssets();
                     DestroyImmediate(built);
                 }

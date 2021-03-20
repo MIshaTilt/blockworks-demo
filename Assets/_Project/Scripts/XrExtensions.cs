@@ -10,7 +10,7 @@ public static class XrExtensions
         InputDevices.GetDevicesWithCharacteristics(characteristics, devices);
         return devices;
     }
-    
+
     public static InputDevice GetDevice(this InputDeviceCharacteristics characteristics)
     {
         return characteristics.GetDevices().FirstOrDefault();

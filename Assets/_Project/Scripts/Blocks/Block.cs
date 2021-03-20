@@ -49,7 +49,7 @@ namespace Blocks
                 return boundsSize.x * boundsSize.y * boundsSize.z * BlockMaterial.Density;
             }
         }
-        
+
         private void Awake()
         {
             sockets = GetComponentsInChildren<Socket>();
@@ -82,9 +82,9 @@ namespace Blocks
             {
                 if (ignore != null && ignore.Contains(connection))
                 {
-                    continue;                    
+                    continue;
                 }
-                
+
                 if (!allConnections.Contains(connection))
                 {
                     allConnections.Add(connection);

@@ -11,10 +11,11 @@ namespace Blocks.Factories
         public BlockStrategy Strategy;
         public GameObject prefab;
         public Mesh meshPrefab;
-        
+
         public enum BlockStrategy
         {
-            Basic, Slope
+            Basic,
+            Slope
         }
     }
 }

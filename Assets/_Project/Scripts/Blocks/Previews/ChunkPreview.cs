@@ -14,7 +14,7 @@ namespace Blocks.Previews
         [SerializeField] private Material material;
         [SerializeField] private Dictionary<Socket, Socket> previewToRealSocketMap;
         [SerializeField] private PreviewConnector connector;
-        
+
         public IEnumerable<SocketPair> Snap { get; private set; }
 
         private void Update()
@@ -51,10 +51,10 @@ namespace Blocks.Previews
             {
                 var thisSocket = previewToRealSocketMap[socketPair.This];
                 var otherSocket = socketPair.Other;
-                return new SocketPair{This = thisSocket, Other = otherSocket};
+                return new SocketPair {This = thisSocket, Other = otherSocket};
             });
         }
-      
+
         public void BeginSnap()
         {
             gameObject.SetActive(true);
@@ -68,7 +68,7 @@ namespace Blocks.Previews
             {
                 // Copy the transform back
                 owner.transform.CopyWorldFrom(transform);
-                
+
                 var newBlock = ChunkFactory.Connect(Snap);
                 SwitchLayerInChildren(newBlock.transform, "Snap", "Default");
             }
@@ -93,7 +93,7 @@ namespace Blocks.Previews
                     {
                         renderer.enabled = value;
                     }
-                    
+
                     visible = value;
                 }
             }

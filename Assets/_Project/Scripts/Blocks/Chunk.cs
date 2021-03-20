@@ -21,7 +21,7 @@ namespace Blocks
         {
             var sockets = transform.GetComponentsInChildren<Socket>();
             var connected = new Socket[sockets.Length];
-            
+
             // Find all connected pairs
             for (var i = 0; i < sockets.Length; i++)
             {
@@ -32,7 +32,7 @@ namespace Blocks
                     var closest = candidate
                         .OrderBy(o => o.transform.position.Distance(socket.transform.position))
                         .First();
-                    
+
                     var sockets2 = closest;
                     if (sockets2.Type != socket.Type)
                     {
@@ -55,7 +55,7 @@ namespace Blocks
         }
 
         public bool IsAnchored => Blocks.Any(l => l.IsAnchored);
-        
+
         public IEnumerable<Block> Blocks => GetComponentsInChildren<Block>();
 
         private void OnDrawGizmosSelected()
@@ -68,10 +68,10 @@ namespace Blocks
                 if (i == 0) color = Color.red;
                 if (i == 1) color = Color.blue;
                 if (i >= 2) size = 0.005f;
-                
+
                 var from = connections[i].thisSocket.transform.position;
                 var to = connections[i].otherSocket.transform.position;
-                
+
                 Gizmos.color = color.SetAlpha(.5f);
                 Gizmos.DrawSphere(from, size);
                 Gizmos.DrawSphere(to, size);
@@ -126,7 +126,7 @@ namespace Blocks
             DisconnectSockets(sockets);
             DisconnectChunks(groups);
         }
-        
+
         private void DisconnectSockets(IEnumerable<Socket> sockets)
         {
             foreach (var socket in sockets)
@@ -140,28 +140,28 @@ namespace Blocks
             foreach (var group in groups)
             {
                 var chunk = CreateChunk();
-                
+
                 // Align the chunk origin with first block
                 var firstBlockTransform = group.First().transform;
                 chunk.transform.position = firstBlockTransform.position;
                 chunk.transform.rotation = firstBlockTransform.rotation;
-            
+
                 foreach (var block in group)
                 {
                     block.ConnectTo(chunk);
                 }
             }
         }
-        
+
         private Chunk CreateChunk()
         {
             var chunk = new GameObject().AddComponent<Chunk>();
-            
+
             var snapper = chunk.gameObject.AddComponent<ChunkSnapper>();
             var chunkRb = chunk.gameObject.AddComponent<Rigidbody>();
             chunkRb.interpolation = RigidbodyInterpolation.Interpolate;
             chunkRb.isKinematic = chunk.IsAnchored;
-            
+
             return chunk;
         }
     }

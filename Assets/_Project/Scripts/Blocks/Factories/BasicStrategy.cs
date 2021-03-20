@@ -23,7 +23,7 @@ namespace Blocks.Factories
             var collider = block.gameObject.AddComponent<BoxCollider>();
             collider.center = mesh.bounds.center;
             collider.size = mesh.bounds.size;
-            
+
             AddSocket(block, SocketType.Male, new Vector3(0, 0.02f * size.y, 0), size.x, size.z);
             AddSocket(block, SocketType.Female, new Vector3(0, 0, 0), size.x, size.z);
         }

@@ -17,7 +17,7 @@ namespace Blocks.Previews
             var chunkPreview = chunkPreviewGo.AddComponent<ChunkPreview>();
             chunkPreview.Owner = chunk;
             chunkPreview.Connector = chunkPreviewGo.AddComponent<PreviewConnector>();
-            
+
             // Set all materials to translucent
             var translucentMat = new Material(Shader.Find("Standard"));
             translucentMat.SetupMaterialWithBlendMode(MaterialExtensions.Mode.Fade);
@@ -27,8 +27,9 @@ namespace Blocks.Previews
             {
                 r.materials = r.materials.Select(m => translucentMat).ToArray();
             }
+
             chunkPreview.Material = translucentMat;
-            
+
             // Setup rigidbody
             var component = chunkPreviewGo.AddComponent<Rigidbody>();
             component.isKinematic = true;
@@ -43,11 +44,11 @@ namespace Blocks.Previews
 
             return chunkPreview;
         }
-        
+
         private static void CopyHierarchyAndComponents(Transform from, Transform to)
         {
             CopyComponents(from, to);
-            
+
             foreach (Transform fromChild in from)
             {
                 var toChild = new GameObject().transform;
