@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using Blocks.Builder;
 using Blocks.Sockets;
 using ElasticSea.Framework.Extensions;
 using UnityEngine;
@@ -157,7 +158,7 @@ namespace Blocks
         {
             var chunk = new GameObject().AddComponent<Chunk>();
 
-            var snapper = chunk.gameObject.AddComponent<ChunkSnapper>();
+            var snapper = chunk.gameObject.AddComponent<BuildPreviewManager>();
             var chunkRb = chunk.gameObject.AddComponent<Rigidbody>();
             chunkRb.interpolation = RigidbodyInterpolation.Interpolate;
             chunkRb.isKinematic = chunk.IsAnchored;
