@@ -24,7 +24,7 @@ namespace Blocks
             chunk.Disconnect(sockets, rest);
         }
 
-        private static HashSet<Chunk> GetChunksFromSocketPairs(IEnumerable<SocketPair> socketPairs)
+        private static IEnumerable<Chunk> GetChunksFromSocketPairs(IEnumerable<SocketPair> socketPairs)
         {
             var chunks = new HashSet<Chunk>();
             foreach (var (thisSocket, otherSocket) in socketPairs)
