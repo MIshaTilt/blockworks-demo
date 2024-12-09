@@ -11,7 +11,7 @@ namespace Sandbox
     
         public void Spawn()
         {
-            var element = Instantiate(blocks.RandomElement());
+            var element = Instantiate(blocks.RandomElement(),transform.position,Quaternion.identity);
             element.transform.position = transform.position;
         
             var mat = new Material(Shader.Find("Standard"));
