@@ -57,80 +57,42 @@ namespace Sandbox.Controller
 			Debug.Log("STARTED");
 			var blockCandidate = CheckForChunk();
 
-			if (blockCandidate)
-			{
-				chunkHeld = blockCandidate;
-				chunkHeld.GetComponent<BuildPreviewManager>().StartPreview();
-			}
-			else
-			{
-				chunkHeld = null;
-			}
+			chunkHeld = blockCandidate;
+
+			chunkHeld.GetComponent<BuildPreviewManager>().StartPreview();
 		}
 
 		private void GrabEnd()
 		{
 			Debug.Log("ENDED");
-			if (chunkHeld)
-			{
-				chunkHeld.GetComponent<Rigidbody>().isKinematic = false;
-				chunkHeld.GetComponent<BuildPreviewManager>().StopPreview();
-			}
-
-			chunkHeld = null;
-		}
-
-		private void Disconnect()
-		{
-			var blockCandidate = CheckForBlock();
-			if (blockCandidate)
-			{
-				ChunkFactory.Disconnect(blockCandidate.Chunk, new[] { blockCandidate });
-			}
+			chunkHeld.GetComponent<Rigidbody>().isKinematic = false;
+			chunkHeld.GetComponent<BuildPreviewManager>().StopPreview();
 		}
 
 		private Chunk CheckForChunk()
-		{
-			var blockCandidate = Physics.OverlapSphere(transform.position, 0.5f)
+		{;
+			var blockCandidate = Physics.OverlapSphere(transform.position, 0.05f)
 				.Where(c => c.GetComponent<Block>() )
 				.Where(c => c.GetComponent<Block>().IsAnchored == false)
 				.OrderBy(c => c.transform.position.Distance(transform.position))
 				.FirstOrDefault();
-
-			for (int i = 0; i < 50; i++)
-			{
-				if (blockCandidate)
-					break;
-				blockCandidate = Physics.OverlapSphere(transform.position, 0.5f)
-				.Where(c => c.GetComponent<Block>() )
-				.Where(c => c.GetComponent<Block>().IsAnchored == false)
-				.OrderBy(c => c.transform.position.Distance(transform.position))
-				.FirstOrDefault();
-			}
 			var chunk = blockCandidate.GetComponentInParent<Chunk>();
 			if (chunk.GetComponent<Rigidbody>().isKinematic == false)
 			{
 				return chunk;
 			}
-			return null;
+	  		return null;
 		}
 
 		private Block CheckForBlock()
 		{
-			var blockCandidate = Physics.OverlapSphere(transform.position, 0.5f)
+			var blockCandidate = Physics.OverlapSphere(transform.position, 0.05f)
 				.Where(c => c.GetComponent<Block>() )
 				.OrderBy(c => c.transform.position.Distance(transform.position))
 				.FirstOrDefault();
-			for (int i = 0; i < 50; i++)
-			{
-				if (blockCandidate)
-					break;
-				blockCandidate = Physics.OverlapSphere(transform.position, 0.5f)
-				.Where(c => c.GetComponent<Block>() )
-				.OrderBy(c => c.transform.position.Distance(transform.position))
-				.FirstOrDefault();
-			}
-			return blockCandidate.GetComponent<Block>();
+			if (blockCandidate != null)
+				return blockCandidate.GetComponent<Block>();
+			return null;
 		}
 	}
 }

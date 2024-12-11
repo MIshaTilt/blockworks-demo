@@ -837,7 +837,7 @@ MonoBehaviour:
   _targetTransform: {fileID: 5783224331360801894}
   _maxGrabPoints: -1
   _rigidbody: {fileID: 5151852596016953614}
-  _kinematicWhileSelected: 1
+  _kinematicWhileSelected: 0
   _throwWhenUnselected: 1
 --- !u!114 &6654640746097525310
 MonoBehaviour:
