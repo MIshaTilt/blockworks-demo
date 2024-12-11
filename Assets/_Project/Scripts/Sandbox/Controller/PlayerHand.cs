@@ -14,6 +14,8 @@ namespace Sandbox.Controller
 		// [SerializeField] private ChunkSpawner chunkSpawner;
 		private bool grabbed = false;
 		private Chunk chunkHeld;
+		private Block blockHeld;
+		private bool flag = false;
 
 		private void Start()
 		{
@@ -50,6 +52,17 @@ namespace Sandbox.Controller
 				chunkHeld.transform.position = transform.position;
 				chunkHeld.transform.rotation = transform.rotation;
 			}
+			else if (flag)
+			{
+				flag = false;
+				Debug.Log("Зашло в else");
+				if (chunkHeld)
+				{
+					var component = chunkHeld.GetComponent<Rigidbody>();
+					component.isKinematic = false;
+					chunkHeld = null;
+				}
+			}
 		}
 
 		private void GrabStart()
@@ -57,41 +70,57 @@ namespace Sandbox.Controller
 			Debug.Log("STARTED");
 			var blockCandidate = CheckForChunk();
 
-			chunkHeld = blockCandidate;
-
-			chunkHeld.GetComponent<BuildPreviewManager>().StartPreview();
+			if (blockCandidate)
+			{
+				chunkHeld = blockCandidate;
+				chunkHeld.GetComponent<BuildPreviewManager>().StartPreview();
+				flag = true;
+			}
+			else
+				chunkHeld = null;
 		}
 
 		private void GrabEnd()
 		{
-			Debug.Log("ENDED");
-			chunkHeld.GetComponent<Rigidbody>().isKinematic = false;
-			chunkHeld.GetComponent<BuildPreviewManager>().StopPreview();
+			if (chunkHeld)
+			{
+				chunkHeld.GetComponent<Rigidbody>().isKinematic = false;
+				chunkHeld.GetComponent<BuildPreviewManager>().StopPreview();
+				flag = false;
+			}
+
+			chunkHeld = null;
 		}
 
 		private Chunk CheckForChunk()
 		{;
-			var blockCandidate = Physics.OverlapSphere(transform.position, 0.05f)
+			var blockCandidate = Physics.OverlapSphere(transform.position, 0.3f)
 				.Where(c => c.GetComponent<Block>() )
 				.Where(c => c.GetComponent<Block>().IsAnchored == false)
 				.OrderBy(c => c.transform.position.Distance(transform.position))
 				.FirstOrDefault();
-			var chunk = blockCandidate.GetComponentInParent<Chunk>();
-			if (chunk.GetComponent<Rigidbody>().isKinematic == false)
+			if (blockCandidate)
 			{
-				return chunk;
+				var chunk = blockCandidate.GetComponentInParent<Chunk>();
+				if (chunk.GetComponent<Rigidbody>().isKinematic == false)
+				{
+					return chunk;
+				}
 			}
-	  		return null;
+			return null;
 		}
 
 		private Block CheckForBlock()
 		{
-			var blockCandidate = Physics.OverlapSphere(transform.position, 0.05f)
+			var blockCandidate = Physics.OverlapSphere(transform.position, 0.3f)
 				.Where(c => c.GetComponent<Block>() )
 				.OrderBy(c => c.transform.position.Distance(transform.position))
 				.FirstOrDefault();
-			if (blockCandidate != null)
+			if (blockCandidate)
+			{
 				return blockCandidate.GetComponent<Block>();
+			}
+
 			return null;
 		}
 	}
