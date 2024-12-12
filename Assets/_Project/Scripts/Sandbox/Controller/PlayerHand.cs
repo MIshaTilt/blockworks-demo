@@ -42,8 +42,15 @@ namespace Sandbox.Controller
 				yield return null;
 			}
 		}
-
-		private void Update()
+        private void Disconnect()
+        {
+            var blockCandidate = CheckForBlock();
+            if (blockCandidate)
+            {
+                ChunkFactory.Disconnect(blockCandidate.Chunk, new[] { blockCandidate });
+            }
+        }
+        private void Update()
 		{
 			if (chunkHeld)
 			{
@@ -67,8 +74,11 @@ namespace Sandbox.Controller
 
 		private void GrabStart()
 		{
+
 			Debug.Log("STARTED");
+			Disconnect();
 			var blockCandidate = CheckForChunk();
+			
 
 			if (blockCandidate)
 			{
