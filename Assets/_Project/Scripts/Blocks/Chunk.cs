@@ -124,8 +124,11 @@ namespace Blocks
 
         public void Disconnect(IEnumerable<Socket> sockets, IEnumerable<IEnumerable<Block>> groups)
         {
+            Debug.Log($"Disconnecting sockets: {sockets.Count()}, Groups: {groups.Count()}");
             DisconnectSockets(sockets);
+            Debug.Log("Sockets disconnected.");
             DisconnectChunks(groups);
+            Debug.Log("Chunks disconnected.");
         }
 
         private void DisconnectSockets(IEnumerable<Socket> sockets)

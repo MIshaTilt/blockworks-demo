@@ -44,10 +44,16 @@ namespace Sandbox.Controller
 		}
         private void Disconnect()
         {
+			Debug.Log("TRY DISCONNECT");
             var blockCandidate = CheckForBlock();
             if (blockCandidate)
             {
+                Debug.Log($"Disconnecting block: {blockCandidate.name}");
                 ChunkFactory.Disconnect(blockCandidate.Chunk, new[] { blockCandidate });
+            }
+			else
+			{
+                Debug.LogWarning("NO block found to disconnect.");
             }
         }
         private void Update()
@@ -122,13 +128,15 @@ namespace Sandbox.Controller
 
 		private Block CheckForBlock()
 		{
-			var blockCandidate = Physics.OverlapSphere(transform.position, 0.3f)
+            Debug.Log("START check for block");
+            var blockCandidate = Physics.OverlapSphere(transform.position, 0.3f)
 				.Where(c => c.GetComponent<Block>() )
 				.OrderBy(c => c.transform.position.Distance(transform.position))
 				.FirstOrDefault();
 			if (blockCandidate)
 			{
-				return blockCandidate.GetComponent<Block>();
+                Debug.Log($"Block found: {blockCandidate.name}");
+                return blockCandidate.GetComponent<Block>();
 			}
 
 			return null;

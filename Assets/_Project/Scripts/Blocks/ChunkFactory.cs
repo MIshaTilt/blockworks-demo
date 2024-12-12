@@ -1,8 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Blocks.Sockets;
 using ElasticSea.Framework.Extensions;
+using UnityEngine;
+
 
 namespace Blocks
 {
@@ -18,10 +21,12 @@ namespace Blocks
 
         public static void Disconnect(Chunk chunk, IEnumerable<Block> blocks)
         {
+            UnityEngine.Debug.Log($"Disconnect called. Chunk: {chunk.name}, Blocks count: {blocks.Count()}");
             var groups = SplitToGroups(chunk, blocks);
             var sockets = GetSockets(groups, blocks);
             var (main, rest) = groups.Append(blocks).SeparateMainGroup(c => c);
             chunk.Disconnect(sockets, rest);
+            UnityEngine.Debug.Log("Disconnect process completed.");
         }
 
         private static IEnumerable<Chunk> GetChunksFromSocketPairs(IEnumerable<SocketPair> socketPairs)
