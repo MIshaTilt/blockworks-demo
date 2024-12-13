@@ -3,6 +3,7 @@ using System.Linq;
 using Blocks;
 using Blocks.Builder;
 using ElasticSea.Framework.Extensions;
+using Oculus.Interaction.GrabAPI;
 using Oculus.Interaction.HandGrab;
 using UnityEngine;
 
@@ -16,32 +17,37 @@ namespace Sandbox.Controller
 		private Chunk chunkHeld;
 		private Block blockHeld;
 		private bool flag = false;
+        [SerializeField] private HandGrabAPI pinch ;
+        [SerializeField] private HandGrabAPI palm;
 
-		private void Start()
+		
+
+        private void Start()
 		{
 			StartCoroutine(CheckGrab());
 		}
 		private IEnumerator CheckGrab()
-		{
-			while (true)
-			{
-				if (_grabInteractor.IsGrabbing && !grabbed)
-				{
-					grabbed = true;
-					GrabStart();
-				}
-				else if (!_grabInteractor.IsGrabbing && grabbed)
-				{
-					yield return new WaitForFixedUpdate();
-					if (!_grabInteractor.IsGrabbing)
-					{
-						grabbed = false;
-						GrabEnd();
-					}
-				}
-				yield return null;
-			}
-		}
+        {
+            
+            while (true)
+            {
+                if (_grabInteractor.IsGrabbing && !grabbed)
+                {
+                    grabbed = true;
+                    GrabStart();
+                }
+                else if (!_grabInteractor.IsGrabbing && grabbed)
+                {
+                    yield return new WaitForFixedUpdate();
+                    if (!_grabInteractor.IsGrabbing)
+                    {
+                        grabbed = false;
+                        GrabEnd();
+                    }
+                }
+                yield return null;
+            }
+        }
         private void Disconnect()
         {
 			Debug.Log("TRY DISCONNECT");
@@ -56,6 +62,7 @@ namespace Sandbox.Controller
                 Debug.LogWarning("NO block found to disconnect.");
             }
         }
+
         private void Update()
 		{
 			if (chunkHeld)
@@ -82,7 +89,7 @@ namespace Sandbox.Controller
 		{
 
 			Debug.Log("STARTED");
-			Disconnect();
+			
 			var blockCandidate = CheckForChunk();
 			
 
