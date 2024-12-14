@@ -1,43 +1,42 @@
 using System;
 using System.Collections.Generic;
-using Oculus.Interaction;
-using Oculus.Interaction.HandGrab;
 using UnityEngine;
+using UnityEngine.XR;
+using Utils;
 
 public class Helper : MonoBehaviour
 {
-    public HandGrabInteractor HandInteractor { get; set; }
+    public InputDeviceCharacteristics Device { get; set; }
 
-    private List<(Action<bool>, bool)> interactionMappings = new List<(Action<bool>, bool)>();
+    private List<(InputFeatureUsage<bool>, Action<bool>, bool)> Blasdfnln = new List<(InputFeatureUsage<bool>, Action<bool>, bool)>();
 
-    /// <summary>
-    /// Регистрирует обработчик для событий взаимодействия с объектом (захват или отпускание).
-    /// </summary>
-    public void RegisterInteraction(Action<bool> action)
+    public void RegisterButton(InputFeatureUsage<bool> triggerButton, Action<bool> action)
     {
-        interactionMappings.Add((action, false));
+        Blasdfnln.Add((triggerButton, action, false));
     }
 
     private void Update()
     {
-        // Проверяем текущее состояние взаимодействия руки с объектом.
-        bool isGrabbing = HandInteractor != null && HandInteractor.HasInteractable;
+        var device = Device.GetDevice();
 
-        for (var i = 0; i < interactionMappings.Count; i++)
+        for (var i = 0; i < Blasdfnln.Count; i++)
         {
-            var (action, wasGrabbing) = interactionMappings[i];
-
-            if (!wasGrabbing && isGrabbing)
+            var (inputFeatureUsage, action, item3) = Blasdfnln[i];
+            if (item3 == false)
             {
-                // Переход в состояние "захват".
-                interactionMappings[i] = (action, true);
-                action(true); // Вызываем обработчик, передавая true.
+                if (device.GetFeatureValue(inputFeatureUsage) == true)
+                {
+                    Blasdfnln[i] = (inputFeatureUsage, action, true);
+                    action(true);
+                }
             }
-            else if (wasGrabbing && !isGrabbing)
+            else
             {
-                // Переход в состояние "отпущено".
-                interactionMappings[i] = (action, false);
-                action(false); // Вызываем обработчик, передавая false.
+                if (device.GetFeatureValue(inputFeatureUsage) == false)
+                {
+                    Blasdfnln[i] = (inputFeatureUsage, action, false);
+                    action(false);
+                }
             }
         }
     }

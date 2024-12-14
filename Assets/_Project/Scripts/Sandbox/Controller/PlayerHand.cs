@@ -1,153 +1,173 @@
-using System.Collections;
+using System;
 using System.Linq;
 using Blocks;
 using Blocks.Builder;
 using ElasticSea.Framework.Extensions;
-using Oculus.Interaction.GrabAPI;
-using Oculus.Interaction.HandGrab;
 using UnityEngine;
+using UnityEngine.XR;
+using Utils;
 
 namespace Sandbox.Controller
 {
-	public class PlayerHand : MonoBehaviour
-	{
-		[SerializeField] private HandGrabInteractor _grabInteractor;
-		// [SerializeField] private ChunkSpawner chunkSpawner;
-		private bool grabbed = false;
-		private Chunk chunkHeld;
-		private Block blockHeld;
-		private bool flag = false;
-        [SerializeField] private HandGrabAPI pinch ;
-        [SerializeField] private HandGrabAPI palm;
+    public class PlayerHand : MonoBehaviour
+    {
+        private bool triggerHeld;
+        private Chunk chunkHeld;
+        [SerializeField] private Renderer sphere;
+        [SerializeField] private ChunkSpawner chunkSpawner;
+        private Helper helper;
 
-		
-
-        private void Start()
-		{
-			StartCoroutine(CheckGrab());
-		}
-		private IEnumerator CheckGrab()
+        private void Awake()
         {
-            
-            while (true)
+            var leftHandedDevices = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Right | InputDeviceCharacteristics.Controller;
+            helper = gameObject.AddComponent<Helper>();
+            helper.Device = leftHandedDevices;
+            helper.RegisterButton(CommonUsages.triggerButton, isDown =>
             {
-                if (_grabInteractor.IsGrabbing && !grabbed)
+                switch (state)
                 {
-                    grabbed = true;
-                    GrabStart();
+                    case State.Grab:
+                        if (isDown)
+                        {
+                            GrabStart();
+                        }
+                        else
+                        {
+                            GrabEnd();
+                        }
+                        break;
+                    case State.Disconnect:
+                        if (isDown)
+                        {
+                            Disconnect();
+                        }
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
                 }
-                else if (!_grabInteractor.IsGrabbing && grabbed)
+            });
+            helper.RegisterButton(CommonUsages.primaryButton, isDown =>
+            {
+                if (isDown)
                 {
-                    yield return new WaitForFixedUpdate();
-                    if (!_grabInteractor.IsGrabbing)
-                    {
-                        grabbed = false;
-                        GrabEnd();
-                    }
+                    state = state.Next();
+                    UpdateState();
                 }
-                yield return null;
-            }
+            });
         }
+
         private void Disconnect()
         {
-			Debug.Log("TRY DISCONNECT");
             var blockCandidate = CheckForBlock();
             if (blockCandidate)
             {
-                Debug.Log($"Disconnecting block: {blockCandidate.name}");
                 ChunkFactory.Disconnect(blockCandidate.Chunk, new[] { blockCandidate });
-            }
-			else
-			{
-                Debug.LogWarning("NO block found to disconnect.");
             }
         }
 
         private void Update()
-		{
-			if (chunkHeld)
-			{
-				var component = chunkHeld.GetComponent<Rigidbody>();
-				component.isKinematic = true;
-				chunkHeld.transform.position = transform.position;
-				chunkHeld.transform.rotation = transform.rotation;
-			}
-			else if (flag)
-			{
-				flag = false;
-				Debug.Log("Зашло в else");
-				if (chunkHeld)
-				{
-					var component = chunkHeld.GetComponent<Rigidbody>();
-					component.isKinematic = false;
-					chunkHeld = null;
-				}
-			}
-		}
+        {
+            if (chunkHeld)
+            {
+                var component = chunkHeld.GetComponent<Rigidbody>();
+                component.isKinematic = true;
+                component.transform.position = transform.position;
+                component.transform.rotation = transform.rotation;
+                // component.MovePosition(transform.position);
+                // component.MoveRotation(transform.rotation);
+            }
 
-		private void GrabStart()
-		{
+            var leftHandedDevices = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Right | InputDeviceCharacteristics.Controller;
+            var device = leftHandedDevices.GetDevice();
+            if (device.GetFeatureValue(CommonUsages.secondaryButton) == true)
+            {
+                chunkSpawner.Spawn();
+            }
+            UpdateState();
+        }
 
-			Debug.Log("STARTED");
-			
-			var blockCandidate = CheckForChunk();
-			
+        public enum State
+        {
+            Grab, Disconnect
+        }
 
-			if (blockCandidate)
-			{
-				chunkHeld = blockCandidate;
-				chunkHeld.GetComponent<BuildPreviewManager>().StartPreview();
-				flag = true;
-			}
-			else
-				chunkHeld = null;
-		}
+        [SerializeField] private State state;
+        private void UpdateState()
+        {
+            switch (state)
+            {
+                case State.Grab:
+                    sphere.material.color = Color.green;
+                    break;
+                case State.Disconnect:
+                    sphere.material.color = Color.red;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
 
-		private void GrabEnd()
-		{
-			if (chunkHeld)
-			{
-				chunkHeld.GetComponent<Rigidbody>().isKinematic = false;
-				chunkHeld.GetComponent<BuildPreviewManager>().StopPreview();
-				flag = false;
-			}
+        private void GrabStart()
+        {
+            var blockCandidate = CheckForChunk();
 
-			chunkHeld = null;
-		}
 
-		private Chunk CheckForChunk()
-		{;
-			var blockCandidate = Physics.OverlapSphere(transform.position, 0.3f)
-				.Where(c => c.GetComponent<Block>() )
-				.Where(c => c.GetComponent<Block>().IsAnchored == false)
-				.OrderBy(c => c.transform.position.Distance(transform.position))
-				.FirstOrDefault();
-			if (blockCandidate)
-			{
-				var chunk = blockCandidate.GetComponentInParent<Chunk>();
-				if (chunk.GetComponent<Rigidbody>().isKinematic == false)
-				{
-					return chunk;
-				}
-			}
-			return null;
-		}
+            if (blockCandidate)
+            {
+                chunkHeld = blockCandidate;
+                chunkHeld.GetComponent<BuildPreviewManager>().StartPreview();
+            }
+            else
+            {
+                chunkHeld = null;
+            }
+        }
 
-		private Block CheckForBlock()
-		{
-            Debug.Log("START check for block");
-            var blockCandidate = Physics.OverlapSphere(transform.position, 0.3f)
-				.Where(c => c.GetComponent<Block>() )
-				.OrderBy(c => c.transform.position.Distance(transform.position))
-				.FirstOrDefault();
-			if (blockCandidate)
-			{
-                Debug.Log($"Block found: {blockCandidate.name}");
+        private Chunk CheckForChunk()
+        {
+            var blockCandidate = Physics.OverlapSphere(transform.position, 0.05f)
+                .Where(c => c.GetComponent<Block>())
+                .Where(c => c.GetComponent<Block>().IsAnchored == false)
+                .OrderBy(c => c.transform.position.Distance(transform.position))
+                .FirstOrDefault();
+
+            if (blockCandidate)
+            {
+                var chunk = blockCandidate.GetComponentInParent<Chunk>();
+                if (chunk.GetComponent<Rigidbody>().isKinematic == false)
+                {
+                    return chunk;
+                }
+            }
+
+
+            return null;
+        }
+        private Block CheckForBlock()
+        {
+            var blockCandidate = Physics.OverlapSphere(transform.position, 0.05f)
+                .Where(c => c.GetComponent<Block>())
+                .OrderBy(c => c.transform.position.Distance(transform.position))
+                .FirstOrDefault();
+
+            if (blockCandidate)
+            {
                 return blockCandidate.GetComponent<Block>();
-			}
+            }
 
-			return null;
-		}
-	}
+            return null;
+        }
+
+        private void GrabEnd()
+        {
+            if (chunkHeld)
+            {
+                chunkHeld.GetComponent<Rigidbody>().isKinematic = false;
+                chunkHeld.GetComponent<BuildPreviewManager>().StopPreview();
+            }
+
+            chunkHeld = null;
+        }
+    }
 }
 
