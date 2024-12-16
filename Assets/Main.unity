@@ -5629,8 +5629,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 424320851}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.64965117, y: 0.27920124, z: 0.27920145, w: 0.6496512}
-  m_LocalPosition: {x: 0.348, y: 1.118, z: 0.34}
+  m_LocalRotation: {x: -0.51182103, y: 0.5112749, z: 0.46576634, w: 0.5096067}
+  m_LocalPosition: {x: 0.76716125, y: 1.1176558, z: 0.3633133}
   m_LocalScale: {x: 37.244, y: 37.243996, z: 37.243996}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5654,7 +5654,7 @@ Transform:
   - {fileID: 854246281}
   - {fileID: 2140796408}
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: -90, y: 0, z: 46.513}
+  m_LocalEulerAnglesHint: {x: -93.692, y: -43.487, z: 130.942}
 --- !u!1 &432958485
 GameObject:
   m_ObjectHideFlags: 0
@@ -18978,7 +18978,7 @@ Transform:
   m_GameObject: {fileID: 1095459972}
   serializedVersion: 2
   m_LocalRotation: {x: -0.6500361, y: 0.27936676, z: 0.2790358, w: 0.64926606}
-  m_LocalPosition: {x: -0.232, y: 1.619, z: -0.529}
+  m_LocalPosition: {x: -0.413, y: 1.328, z: -0.123}
   m_LocalScale: {x: 37.244, y: 37.24399, z: 37.24399}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -19305,7 +19305,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1120800280}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -21876,7 +21876,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1314409154}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -27507,7 +27507,7 @@ Rigidbody:
   m_ImplicitTensor: 1
   m_UseGravity: 1
   m_IsKinematic: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_Constraints: 0
   m_CollisionDetection: 0
 --- !u!114 &1713775512
@@ -28850,7 +28850,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1799926716}
-  m_Enabled: 0
+  m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -37296,8 +37296,8 @@ GameObject:
   - component: {fileID: 970665618121957272}
   - component: {fileID: 68831403731793044}
   - component: {fileID: 3400761550754498659}
-  - component: {fileID: 3400761550754498661}
   - component: {fileID: 3400761550754498660}
+  - component: {fileID: 3400761550754498661}
   m_Layer: 0
   m_Name: Wheel_RL
   m_TagString: Untagged
@@ -38169,25 +38169,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   chunk: {fileID: 424320854}
-  sockets:
-  - {fileID: 1452460024}
-  - {fileID: 211311837}
-  - {fileID: 1641743526}
-  - {fileID: 912051942}
-  - {fileID: 1090742904}
-  - {fileID: 276802110}
-  - {fileID: 1928635547}
-  - {fileID: 1065948214}
-  - {fileID: 1976864578}
-  - {fileID: 552512457}
-  - {fileID: 1839025139}
-  - {fileID: 594485401}
-  - {fileID: 221680387}
-  - {fileID: 1772393291}
-  - {fileID: 1503847365}
-  - {fileID: 1251773818}
-  - {fileID: 854246280}
-  - {fileID: 2140796409}
+  sockets: []
   IsAnchored: 1
   BlockMaterial: {fileID: 11400000, guid: 2fa152e3856824646a5c66406b3af1fd, type: 2}
 --- !u!65 &3389585131670178523
@@ -38267,12 +38249,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chunk: {fileID: 543199552}
   sockets:
-  - {fileID: 1120800284}
   - {fileID: 596171816}
+  - {fileID: 1120800284}
   IsAnchored: 0
   BlockMaterial: {fileID: 11400000, guid: 2fa152e3856824646a5c66406b3af1fd, type: 2}
---- !u!136 &3400761550754498661
-CapsuleCollider:
+--- !u!65 &3400761550754498661
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -38289,11 +38271,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.0016864117
-  m_Height: 0.0021090535
-  m_Direction: 1
-  m_Center: {x: 8.731149e-10, y: -0.000025288671, z: -0.0000000013387763}
+  serializedVersion: 3
+  m_Size: {x: 0.0033728234, y: 0.0021090533, z: 0.0033728231}
+  m_Center: {x: 6.41038e-10, y: -0.000025288202, z: -0.0000000013379579}
 --- !u!4 &3479825712681346454
 Transform:
   m_ObjectHideFlags: 0
@@ -38608,12 +38588,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   chunk: {fileID: 1961193812}
   sockets:
-  - {fileID: 301273401}
   - {fileID: 601019063}
+  - {fileID: 301273401}
   IsAnchored: 0
   BlockMaterial: {fileID: 11400000, guid: 2fa152e3856824646a5c66406b3af1fd, type: 2}
---- !u!136 &5058499656958058954
-CapsuleCollider:
+--- !u!65 &5058499656958058954
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -38630,11 +38610,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.0017193875
-  m_Height: 0.0034387761
-  m_Direction: 1
-  m_Center: {x: -8.9406965e-10, y: 0.000025288622, z: 0.000032974192}
+  serializedVersion: 3
+  m_Size: {x: 0.0033728234, y: 0.0021090533, z: 0.0033728231}
+  m_Center: {x: -8.7386853e-10, y: 0.000025288435, z: -0.0000000013395948}
 --- !u!33 &5161797484438502570
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -39216,8 +39194,8 @@ MonoBehaviour:
   - {fileID: 403307832}
   IsAnchored: 0
   BlockMaterial: {fileID: 11400000, guid: 2fa152e3856824646a5c66406b3af1fd, type: 2}
---- !u!136 &6702126524163932112
-CapsuleCollider:
+--- !u!65 &6702126524163932112
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -39234,11 +39212,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.0016864117
-  m_Height: 0.0021090535
-  m_Direction: 1
-  m_Center: {x: -8.731149e-10, y: 0.000025289602, z: -0.0000000014551916}
+  serializedVersion: 3
+  m_Size: {x: 0.0033728234, y: 0.0021090533, z: 0.0033728231}
+  m_Center: {x: -8.7386853e-10, y: 0.0000252889, z: -0.0000000013395948}
 --- !u!4 &6758287979086365435
 Transform:
   m_ObjectHideFlags: 0
@@ -39633,8 +39609,8 @@ GameObject:
   - component: {fileID: 8259383435347894979}
   - component: {fileID: 5707444619248796459}
   - component: {fileID: 3042558673318653251}
-  - component: {fileID: 8259383435347894981}
   - component: {fileID: 8259383435347894980}
+  - component: {fileID: 8259383435347894981}
   m_Layer: 0
   m_Name: Wheel_FL
   m_TagString: Untagged
@@ -39677,8 +39653,8 @@ MonoBehaviour:
   - {fileID: 1645462436}
   IsAnchored: 0
   BlockMaterial: {fileID: 11400000, guid: 2fa152e3856824646a5c66406b3af1fd, type: 2}
---- !u!136 &8259383435347894981
-CapsuleCollider:
+--- !u!65 &8259383435347894981
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -39687,7 +39663,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -39695,11 +39671,9 @@ CapsuleCollider:
   m_IsTrigger: 0
   m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.0017253712
-  m_Height: 0.0034507436
-  m_Direction: 1
-  m_Center: {x: 8.9406965e-10, y: -0.000025288622, z: 0.000038958202}
+  serializedVersion: 3
+  m_Size: {x: 0.0033728234, y: 0.0021090533, z: 0.0033728231}
+  m_Center: {x: 8.7386864e-10, y: -0.000025288668, z: -0.0000000013379579}
 --- !u!33 &8307408473952223301
 MeshFilter:
   m_ObjectHideFlags: 0
