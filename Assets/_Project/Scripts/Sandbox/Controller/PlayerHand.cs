@@ -79,10 +79,10 @@ namespace Sandbox.Controller
 
             var leftHandedDevices = InputDeviceCharacteristics.HeldInHand | InputDeviceCharacteristics.Right | InputDeviceCharacteristics.Controller;
             var device = leftHandedDevices.GetDevice();
-            if (device.GetFeatureValue(CommonUsages.secondaryButton) == true)
-            {
-                chunkSpawner.Spawn();
-            }
+            // if (device.GetFeatureValue(CommonUsages.secondaryButton) == true)
+            // {
+            //     chunkSpawner.Spawn();
+            // }
             UpdateState();
         }
 
