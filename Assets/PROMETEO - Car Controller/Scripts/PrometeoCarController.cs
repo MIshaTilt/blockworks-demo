@@ -25,20 +25,20 @@ public class PrometeoCarController : MonoBehaviour
       [Range(20, 190)]
       public int maxSpeed = 90; //The maximum speed that the car can reach in km/h.
       [Range(10, 120)]
-      public int maxReverseSpeed = 45; //Максимальная скорость, которую может развить автомобиль при движении задним ходом, в км/ч.m/h.
+      public int maxReverseSpeed = 45; //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅ пїЅпїЅ/пїЅ.m/h.
     [Range(1, 10)]
-      public int accelerationMultiplier = 2; // Как быстро автомобиль может разогнаться. 1 - это медленное ускорение, а 10 - самое быстрое.
+      public int accelerationMultiplier = 2; // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. 1 - пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ 10 - пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
     
     [Range(10, 45)]
-      public int maxSteeringAngle = 27; // Максимальный угол, которого могут достичь шины при повороте рулевого колеса.
+      public int maxSteeringAngle = 27; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
     [Range(0.1f, 1f)]
-      public float steeringSpeed = 0.5f; // Как быстро поворачивается рулевое колесо.
+      public float steeringSpeed = 0.5f; // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
     [Space(10)]
       [Range(100, 600)]
       public int brakeForce = 350; // The strength of the wheel brakes.
     [Range(1, 10)]
-      public int decelerationMultiplier = 2; // Как быстро автомобиль замедляется, когда пользователь не нажимает на газ.
-    public int handbrakeDriftMultiplier = 5; // Насколько сильно автомобиль теряет сцепление с дорогой, когда пользователь нажимает на ручной тормоз.
+      public int decelerationMultiplier = 2; // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ.
+    public int handbrakeDriftMultiplier = 5; // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
     [Space(10)]
       public Vector3 bodyMassCenter; // This is a vector that contains the center of mass of the car. I recommend to set this value
                                      // in the points x = 0 and z = 0 of your car. You can select the value that you want in the y axis,
@@ -50,9 +50,9 @@ public class PrometeoCarController : MonoBehaviour
     //[Header("WHEELS")]
 
     /*
-   Следующие переменные используются для хранения данных о колесах автомобиля. Нам нужны как игровые объекты, предназначенные только для сетки, так и
-компоненты wheel collider для колес. Компоненты wheel collider и 3D-сетки колес не могут быть созданы из одного и того же
-игрового объекта; они должны быть отдельными игровыми объектами.
+   пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅ
+пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ wheel collider пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ wheel collider пїЅ 3D-пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ
+пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ; пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
     */
     public GameObject frontLeftMesh;
       public WheelCollider frontLeftCollider;
@@ -128,7 +128,7 @@ public class PrometeoCarController : MonoBehaviour
       [HideInInspector]
       public bool isDrifting; // Used to know whether the car is drifting or not.
       [HideInInspector]
-      public bool isTractionLocked; // Used to know whether(для того чтобы) the traction(тяга) of the car is locked or not.
+      public bool isTractionLocked; // Used to know whether(пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ) the traction(пїЅпїЅпїЅпїЅ) of the car is locked or not.
 
     //PRIVATE VARIABLES
 
@@ -144,8 +144,8 @@ public class PrometeoCarController : MonoBehaviour
       bool deceleratingCar;
       bool touchControlsSetup = false;
     /*
-    The following variables are used to store(для хранения) information about sideways(боковое) friction(трение) of the wheels (such as
-    extremumSlip(экстрим скольжение),extremumValue, asymptoteSlip, asymptoteValue and stiffness(жесткость)). We change this values to
+    The following variables are used to store(пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) information about sideways(пїЅпїЅпїЅпїЅпїЅпїЅпїЅ) friction(пїЅпїЅпїЅпїЅпїЅпїЅ) of the wheels (such as
+    extremumSlip(пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ),extremumValue, asymptoteSlip, asymptoteValue and stiffness(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ)). We change this values to
     make the car to start drifting.
     */
     WheelFrictionCurve FLwheelFriction;
@@ -166,9 +166,9 @@ public class PrometeoCarController : MonoBehaviour
           carRigidbody = gameObject.GetComponent<Rigidbody>();
           carRigidbody.centerOfMass = bodyMassCenter;
 
-          //Initial(первоначальная) setup(настройка) to calculate the drift value of the car. This part could look a bit
+          //Initial(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) setup(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) to calculate the drift value of the car. This part could look a bit
           //complicated, but do not be afraid, the only thing we're doing here is to save the default
-          //friction(значение трения) values of the car wheels so we can set an appropiate(соотвествующее) drifting value later.
+          //friction(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ) values of the car wheels so we can set an appropiate(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) drifting value later.
           FLwheelFriction = new WheelFrictionCurve ();
             FLwheelFriction.extremumSlip = frontLeftCollider.sidewaysFriction.extremumSlip;
             FLWextremumSlip = frontLeftCollider.sidewaysFriction.extremumSlip;
@@ -198,7 +198,7 @@ public class PrometeoCarController : MonoBehaviour
             RRwheelFriction.asymptoteValue = rearRightCollider.sidewaysFriction.asymptoteValue;
             RRwheelFriction.stiffness = rearRightCollider.sidewaysFriction.stiffness;
 
-        // We save the initial(начальную) pitch(высоту) of the car engine sound.
+        // We save the initial(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) pitch(пїЅпїЅпїЅпїЅпїЅпїЅ) of the car engine sound.
         if (carEngineSound != null){
           initialCarEngineSoundPitch = carEngineSound.pitch;
         }
@@ -280,10 +280,10 @@ public class PrometeoCarController : MonoBehaviour
       The next part is regarding to the car controller. First, it checks if the user wants to use touch controls (for
       mobile devices) or analog input controls (WASD + Space).
 
-      The following methods are called whenever(всякий раз) a certain(определенный) key is pressed. For example, in the first 'if' we call the
+      The following methods are called whenever(пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ) a certain(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) key is pressed. For example, in the first 'if' we call the
       method GoForward() if the user has pressed W.
 
-      In this part of the code we specify(указывать) what the car needs to do if the user presses W (throttle), S (reverse),
+      In this part of the code we specify(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) what the car needs to do if the user presses W (throttle), S (reverse),
       A (turn left), D (turn right) or Space bar (handbrake).
       */
       if (useTouchControls && touchControlsSetup){
@@ -326,41 +326,41 @@ public class PrometeoCarController : MonoBehaviour
 
       }else{
 
-        if(Input.GetKey(KeyCode.W)){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          GoForward();
-        }
-        if(Input.GetKey(KeyCode.S)){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          GoReverse();
-        }
+        // if(Input.GetKey(KeyCode.W)){
+        //   CancelInvoke("DecelerateCar");
+        //   deceleratingCar = false;
+        //   GoForward();
+        // }
+        // if(Input.GetKey(KeyCode.S)){
+        //   CancelInvoke("DecelerateCar");
+        //   deceleratingCar = false;
+        //   GoReverse();
+        // }
 
-        if(Input.GetKey(KeyCode.A)){
-          TurnLeft();
-        }
-        if(Input.GetKey(KeyCode.D)){
-          TurnRight();
-        }
-        if(Input.GetKey(KeyCode.Space)){
-          CancelInvoke("DecelerateCar");
-          deceleratingCar = false;
-          Handbrake();
-        }
-        if(Input.GetKeyUp(KeyCode.Space)){
-          RecoverTraction();
-        }
-        if((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))){
-          ThrottleOff();
-        }
-        if((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)) && !Input.GetKey(KeyCode.Space) && !deceleratingCar){
-          InvokeRepeating("DecelerateCar", 0f, 0.1f);
-          deceleratingCar = true;
-        }
-        if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && steeringAxis != 0f){
-          ResetSteeringAngle();
-        }
+        // if(Input.GetKey(KeyCode.A)){
+        //   TurnLeft();
+        // }
+        // if(Input.GetKey(KeyCode.D)){
+        //   TurnRight();
+        // }
+        // if(Input.GetKey(KeyCode.Space)){
+        //   CancelInvoke("DecelerateCar");
+        //   deceleratingCar = false;
+        //   Handbrake();
+        // }
+        // if(Input.GetKeyUp(KeyCode.Space)){
+        //   RecoverTraction();
+        // }
+        // if((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W))){
+        //   ThrottleOff();
+        // }
+        // if((!Input.GetKey(KeyCode.S) && !Input.GetKey(KeyCode.W)) && !Input.GetKey(KeyCode.Space) && !deceleratingCar){
+        //   InvokeRepeating("DecelerateCar", 0f, 0.1f);
+        //   deceleratingCar = true;
+        // }
+        // if(!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.D) && steeringAxis != 0f){
+        //   ResetSteeringAngle();
+        // }
 
       }
 
@@ -421,7 +421,7 @@ public class PrometeoCarController : MonoBehaviour
     //STEERING METHODS
     //
 
-    //The following method turns the front car wheels to the left. The speed of this movement will depend(зависеть) on the steeringSpeed variable.
+    //The following method turns the front car wheels to the left. The speed of this movement will depend(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) on the steeringSpeed variable.
     public void TurnLeft(){
       steeringAxis = steeringAxis - (Time.deltaTime * 10f * steeringSpeed);
       if(steeringAxis < -1f){
@@ -464,7 +464,7 @@ public class PrometeoCarController : MonoBehaviour
         frontRightCollider.steerAngle = Mathf.Lerp(frontRightCollider.steerAngle, steeringAngle, steeringSpeed);
     }
 
-    // This method matches(соответсвуюше) both the position and rotation of the WheelColliders with the WheelMeshes.
+    // This method matches(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) both the position and rotation of the WheelColliders with the WheelMeshes.
     void AnimateWheelMeshes(){
       try{
         Quaternion FLWRotation;
@@ -510,19 +510,19 @@ public class PrometeoCarController : MonoBehaviour
         isDrifting = false;
         DriftCarPS();
       }
-        // В следующей части плавно установите мощность дроссельной заслонки на 1.
+        // пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ 1.
         throttleAxis = throttleAxis + (Time.deltaTime * 3f);
       if(throttleAxis > 1f){
         throttleAxis = 1f;
       }
-        //Если автомобиль движется задним ходом, затормозите, чтобы избежать странного поведения
-        //. Если локальная скорость по оси "z" меньше -1f, то для движения вперед 
-        //безопасно использовать положительный крутящий момент.
+        //пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        //. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅ "z" пїЅпїЅпїЅпїЅпїЅпїЅ -1f, пїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 
+        //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
       if (localVelocityZ < -1f){
         Brakes();
       }else{
         if(Mathf.RoundToInt(carSpeed) < maxSpeed){
-          //Apply positive torque(крутящийся момент) in all wheels to go forward if maxSpeed has not been reached.
+          //Apply positive torque(пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ) in all wheels to go forward if maxSpeed has not been reached.
           frontLeftCollider.brakeTorque = 0;
           frontLeftCollider.motorTorque = (accelerationMultiplier * 50f) * throttleAxis;
           frontRightCollider.brakeTorque = 0;
@@ -595,9 +595,9 @@ public class PrometeoCarController : MonoBehaviour
       rearRightCollider.motorTorque = 0;
     }
 
-    // Следующий метод снижает скорость автомобиля в соответствии с переменной коэффициента замедления, где
-    // 1 - самое медленное, а 10 - самое быстрое замедление. Этот метод вызывается функцией InvokeRepeating,
-    // // обычно каждые 0,1 секунды, когда пользователь не нажимает W (дроссель), S (реверс) или пробел (ручной тормоз).
+    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ
+    // 1 - пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅ 10 - пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ InvokeRepeating,
+    // // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ 0,1 пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ W (пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ), S (пїЅпїЅпїЅпїЅпїЅпїЅ) пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ).
     public void DecelerateCar(){
       if(Mathf.Abs(localVelocityX) > 2.5f){
         isDrifting = true;
@@ -733,7 +733,7 @@ public class PrometeoCarController : MonoBehaviour
 
     }
 
-    // Эта функция используется для восстановления сцепления автомобиля с дорогой, когда пользователь перестает пользоваться ручным тормозом автомобиля.
+    // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
     public void RecoverTraction(){
       isTractionLocked = false;
       driftingAxis = driftingAxis - (Time.deltaTime / 1.5f);
@@ -741,9 +741,9 @@ public class PrometeoCarController : MonoBehaviour
         driftingAxis = 0f;
       }
 
-        ////Если значение "смещение оси" не равно 0f, это означает, что сцепление колес с дорогой не восстановилось.
-        //Мы продолжим уменьшать боковое трение колес, пока не достигнем исходного значения
-        // сцепление автомобиля с дорогой.
+        ////пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ" пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ 0f, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
+        //пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+        // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
         if (FLwheelFriction.extremumSlip > FLWextremumSlip){
         FLwheelFriction.extremumSlip = FLWextremumSlip * handbrakeDriftMultiplier * driftingAxis;
         frontLeftCollider.sidewaysFriction = FLwheelFriction;

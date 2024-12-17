@@ -3,49 +3,49 @@ using UnityEngine;
 
 public class MainObjectChecker : MonoBehaviour
 {
-    // Объект, который будет заспавнен после удаления всех дочерних объектов
-    public GameObject replacementObject;
+	// пїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	public GameObject replacementObject;
+	private bool _carDone = false;
 
-    void Update()
-    {
-        if (CheckAllChildConditions())
-        {
-            ReplaceChildrenWithObject();
-        }
-    }
+	void Update()
+	{
+		if (CheckAllChildConditions() && !_carDone)
+		{
+			ReplaceChildrenWithObject();
+			_carDone = true;
+		}
+	}
 
-    private bool CheckAllChildConditions()
-    {
-        foreach (Transform child in transform)
-        {
-            ChildObjectChecker checker = child.GetComponent<ChildObjectChecker>();
-            if (checker == null || !checker.isTargetChildFound)
-            {
-                return false; // Если хотя бы один дочерний объект не удовлетворяет условию
-            }
-        }
-        return true; // Все дочерние объекты удовлетворяют условию
-    }
+	private bool CheckAllChildConditions()
+	{
+		foreach (Transform child in transform)
+		{
+			ChildObjectChecker checker = child.GetComponent<ChildObjectChecker>();
+			if (checker == null || !checker.isTargetChildFound)
+			{
+				return false; // пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+			}
+		}
+		return true; // пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	}
 
-    private void ReplaceChildrenWithObject()
-    {
-        // Создаем временный список дочерних объектов, чтобы избежать ошибок изменения коллекции во время итерации
-        List<Transform> children = new List<Transform>();
-        foreach (Transform child in transform)
-        {
-            children.Add(child);
-        }
+	private void ReplaceChildrenWithObject()
+	{
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		List<Transform> children = new List<Transform>();
+		foreach (Transform child in transform)
+		{
+			children.Add(child);
+		}
 
-        // Удаляем всех дочерних объектов
-        foreach (Transform child in children)
-        {
-            Destroy(child.gameObject);
-        }
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		Destroy(gameObject);
 
-        // Спавним новый объект на месте родителя
-        if (replacementObject != null)
-        {
-            Instantiate(replacementObject, transform.position, transform.rotation, transform.parent);
-        }
-    }
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		if (replacementObject != null)
+		{
+			Quaternion _rotation = new(-90f, 0f, -90f, 0);
+			Instantiate(replacementObject, transform.position, transform.rotation, transform.parent);
+		}
+	}
 }
