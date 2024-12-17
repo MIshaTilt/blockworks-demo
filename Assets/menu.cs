@@ -1,8 +1,8 @@
-using Oculus.Interaction;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using Oculus.Interaction;
 using Blocks;
 
 public class Menu : MonoBehaviour
@@ -10,6 +10,7 @@ public class Menu : MonoBehaviour
     [SerializeField] private Chunk[] blocks; // Массив блоков, который можно задать через Inspector
     public List<RectTransform> buttons;      // Список кнопок
     public Transform spawn;                  // Точка спавна
+    public GameObject prefabToSpawn;         // Префаб для 11-й кнопки
     private bool pressed;                    // Флаг, чтобы избежать многократного нажатия
 
     // Start is called before the first frame update
@@ -42,8 +43,17 @@ public class Menu : MonoBehaviour
             }
         }
 
-        // Обработка кнопки для выхода (10-я кнопка)
-        if (buttons[9].localScale.x != 1 && !pressed)
+        // Обработка кнопки для спавна префаба (11-я кнопка)
+        if (buttons[10].localScale.x != 1 && !pressed)
+        {
+            pressed = true;
+            SpawnPrefab();  // Спавним префаб
+            StartCoroutine(Reset());
+            return;
+        }
+
+        // Обработка кнопки для выхода (12-я кнопка)
+        if (buttons[11].localScale.x != 1 && !pressed)
         {
             pressed = true;
             Exit(); // Закрытие приложения
@@ -75,6 +85,15 @@ public class Menu : MonoBehaviour
         }
     }
 
+    // Спавним префаб в точке спавна
+    private void SpawnPrefab()
+    {
+        if (prefabToSpawn != null)
+        {
+            Instantiate(prefabToSpawn, spawn.position, Quaternion.identity);
+        }
+    }
+
     // Сброс флага после нажатия кнопки
     private IEnumerator Reset()
     {
@@ -82,4 +101,3 @@ public class Menu : MonoBehaviour
         pressed = false;
     }
 }
-
