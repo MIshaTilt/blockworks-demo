@@ -45,7 +45,7 @@ public class Menu : MonoBehaviour
             if (buttons[i].localScale.x != 1 && !pressed)
             {
                 pressed = true;
-                SpawnBlockWithoutColor(i - 10);
+                SpawnBlockWithoutColor(i);
                 StartCoroutine(Reset());
                 return;
             }
