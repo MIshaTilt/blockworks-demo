@@ -39,8 +39,20 @@ public class Menu : MonoBehaviour
             }
         }
 
-        // Обработка кнопки для спавна префаба (10-я кнопка)
-        if (buttons[10].localScale.x != 1 && !pressed)
+        // Обработка кнопок для спавна чанков без изменения цвета (10-13 кнопки)
+        for (int i = 10; i < 14; i++)
+        {
+            if (buttons[i].localScale.x != 1 && !pressed)
+            {
+                pressed = true;
+                SpawnBlockWithoutColor(i - 10);
+                StartCoroutine(Reset());
+                return;
+            }
+        }
+
+        // Обработка кнопки для спавна префаба (14-я кнопка)
+        if (buttons[14].localScale.x != 1 && !pressed)
         {
             pressed = true;
             SpawnPrefab();
@@ -48,24 +60,12 @@ public class Menu : MonoBehaviour
             return;
         }
 
-        // Обработка кнопки для выхода (11-я кнопка)
-        if (buttons[11].localScale.x != 1 && !pressed)
+        // Обработка кнопки для выхода (15-я кнопка)
+        if (buttons[15].localScale.x != 1 && !pressed)
         {
             pressed = true;
             Exit();
             return;
-        }
-
-        // Обработка кнопок для спавна чанков без изменения цвета (12-15 кнопки)
-        for (int i = 12; i < 16; i++)
-        {
-            if (buttons[i].localScale.x != 1 && !pressed)
-            {
-                pressed = true;
-                SpawnBlockWithoutColor(i - 12);
-                StartCoroutine(Reset());
-                return;
-            }
         }
     }
 
